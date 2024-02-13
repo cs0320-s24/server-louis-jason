@@ -1,17 +1,10 @@
 package Server;
 
-import CSVFile.CSVFileAPIUtilities;
-import CSVFile.CSVFile;
 import Creator.Creator;
 import Parser.CSVParse;
-
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +31,11 @@ public class LoadCSVFileHandler implements Route {
    * @param response The response object providing functionality for modifying the response
    */
   private DataWrapper<List<String>> data;
-  public LoadCSVFileHandler (DataWrapper<List<String>> data){
+
+  public LoadCSVFileHandler(DataWrapper<List<String>> data) {
     this.data = data;
   }
+
   @Override
   public Object handle(Request request, Response response) {
     // If you are interested in how parameters are received, try commenting out and
@@ -62,10 +57,10 @@ public class LoadCSVFileHandler implements Route {
       // Make this work with loading a CSVfile from a path+name
       CSVParse<List<String>> csvfileParser = this.sendRequest(fileLocation);
       // Deserializes JSON into an CSVFile
-      //CSVFile csvfile = CSVFileAPIUtilities.deserializeCSVFile(csvfileJson);
+      // CSVFile csvfile = CSVFileAPIUtilities.deserializeCSVFile(csvfileJson);
       // Adds results to the responseMap
       responseMap.put("result", "success");
-      data.setCSVParser(csvfileParser);
+      this.data.setCSVParser(csvfileParser);
       return responseMap;
     } catch (Exception e) {
       e.printStackTrace();

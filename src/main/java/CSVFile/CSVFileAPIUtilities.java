@@ -2,7 +2,6 @@ package CSVFile;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-
 import java.io.IOException;
 
 /**

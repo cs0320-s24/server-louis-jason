@@ -1,12 +1,7 @@
 package Server;
 
-
 import static spark.Spark.after;
 
-import Parser.CSVParse;
-import edu.brown.cs.student.main.soup.Soup;
-import edu.brown.cs.student.main.soup.SoupAPIUtilities;
-import java.util.ArrayList;
 import java.util.List;
 import spark.Spark;
 
@@ -22,7 +17,9 @@ import spark.Spark;
 public class Server {
   // TODO 0: Read through this class and determine the shape of this project...
   // What are the endpoints that we can access... What happens if you go to them?
+
   public static void main(String[] args) {
+    DataWrapper<List<String>> dataWrapper = new DataWrapper<List<String>>(null);
     int port = 3232;
     Spark.port(port);
     /*
@@ -50,21 +47,20 @@ public class Server {
 
     // Sets up data needed for the OrderHandler. You will likely not read from local
     // JSON in this sprint.
-//    String menuAsJson = SoupAPIUtilities.readInJson("data/menu.json");
-//    List<Soup> menu = new ArrayList<>();
-//    try {
-//      menu = SoupAPIUtilities.deserializeMenu(menuAsJson);
-//    } catch (Exception e) {
-      // See note in ActivityHandler about this broad Exception catch... Unsatisfactory, but gets
-      // the job done in the gearup where it is not the focus.
-//      e.printStackTrace();
-//      System.err.println("Errored while deserializing the menu");
-//    }
-    DataWrapper<List<String>> parse = new DataWrapper<List<String>>(null);
+    //    String menuAsJson = SoupAPIUtilities.readInJson("data/menu.json");
+    //    List<Soup> menu = new ArrayList<>();
+    //    try {
+    //      menu = SoupAPIUtilities.deserializeMenu(menuAsJson);
+    //    } catch (Exception e) {
+    // See note in ActivityHandler about this broad Exception catch... Unsatisfactory, but gets
+    // the job done in the gearup where it is not the focus.
+    //      e.printStackTrace();
+    //      System.err.println("Errored while deserializing the menu");
+    //    }
     // Setting up the handler for the GET /order and /activity endpoints
-    Spark.get("loadcsv", new LoadCSVFileHandler(parse));
-    Spark.get("viewcsv", new ViewCSVFileHandler());
-    Spark.get("searchcsv", new ActivityHandler());
+    Spark.get("loadcsv", new LoadCSVFileHandler(dataWrapper));
+    Spark.get("viewcsv", new ViewCSVFileHandler(dataWrapper));
+    Spark.get("searchcsv", new SearchCSVFileHandler(dataWrapper));
     Spark.init();
     Spark.awaitInitialization();
 

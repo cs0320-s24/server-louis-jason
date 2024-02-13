@@ -1,6 +1,7 @@
 package Server;
 
 import Parser.CSVParse;
+import Searcher.Search;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import spark.Route;
  */
 // TODO 1: Check out this Handler. How can we make it only get activities based on participant #?
 // See Documentation here: https://www.boredapi.com/documentation
-public class ViewCSVFileHandler implements Route {
+public class SearchCSVFileHandler implements Route {
   /**
    * This handle method needs to be filled by any class implementing Route. When the path set in
    * edu.brown.cs.examples.moshiExample.server.Server gets accessed, it will fire the handle method.
@@ -29,7 +30,7 @@ public class ViewCSVFileHandler implements Route {
    */
   private DataWrapper<List<String>> data;
 
-  public ViewCSVFileHandler(DataWrapper<List<String>> data) {
+  public SearchCSVFileHandler(DataWrapper<List<String>> data) {
     this.data = data;
   }
 
@@ -41,31 +42,42 @@ public class ViewCSVFileHandler implements Route {
     // If you specify a queryParam, you can access it by appending ?parameterName=name to the
     // endpoint
     // ex. http://localhost:3232/activity?participants=num
+    //    Set<String> params = request.queryParams();
+    //     System.out.println(params);
+    String value = request.queryParams("value");
+    String booleanHeader = request.queryParams("booleanHeader");
+    String identifier = request.queryParams("identifier");
+    String booleanIdentifierAnInt = request.queryParams("booleanIdentifierAnInt");
+    //     System.out.println(participants);
 
     // Creates a hashmap to store the results of the request
     Map<String, Object> responseMap = new HashMap<>();
     try {
-      // Sends a request to the API and receives JSON back
-      // Make this work with loading a CSVfile from a path+name
-      //      String csvfileJson = this.sendRequest(fileLocation);
       CSVParse<List<String>> parser = this.data.getCSVParser();
       List<List<String>> objectList = parser.parse();
+      // NEED TO ERROR CHECK BELOW
+      boolean booleanHeaderP = Boolean.parseBoolean(booleanHeader);
+      boolean booleanIdentifierAnIntP = Boolean.parseBoolean(booleanIdentifierAnInt);
 
-      // Adds results to the responseMap
-      responseMap.put("data", objectList);
-      return new ParseSuccessResponse(responseMap).serialize();
+      Search search =
+          new Search(value, booleanHeaderP, identifier, booleanIdentifierAnIntP, objectList);
+      search.searches();
+      List<List<String>> dataList = search.getTestList();
+      responseMap.put("data", dataList);
+      return new SearchSuccessResponse(responseMap).serialize();
     } catch (Exception e) {
       e.printStackTrace();
       // This is a relatively unhelpful exception message. An important part of this sprint will be
       // in learning to debug correctly by creating your own informative error messages where Spark
       // falls short.
-      // responseMap.put("result", "Exception");
+      //      responseMap.put("result", "Exception");
     }
-    return new ParseFailureResponse().serialize();
+    return new SearchFailureResponse().serialize();
   }
+
   /** Response object to send, containing a soup with certain ingredients in it */
-  public record ParseSuccessResponse(String response_type, Map<String, Object> responseMap) {
-    public ParseSuccessResponse(Map<String, Object> responseMap) {
+  public record SearchSuccessResponse(String response_type, Map<String, Object> responseMap) {
+    public SearchSuccessResponse(Map<String, Object> responseMap) {
       this("success", responseMap);
     }
     /**
@@ -75,7 +87,7 @@ public class ViewCSVFileHandler implements Route {
       try {
         // Initialize Moshi which takes in this class and returns it as JSON!
         Moshi moshi = new Moshi.Builder().build();
-        JsonAdapter<ParseSuccessResponse> adapter = moshi.adapter(ParseSuccessResponse.class);
+        JsonAdapter<SearchSuccessResponse> adapter = moshi.adapter(SearchSuccessResponse.class);
         return adapter.toJson(this);
       } catch (Exception e) {
         // For debugging purposes, show in the console _why_ this fails
@@ -88,8 +100,8 @@ public class ViewCSVFileHandler implements Route {
   }
 
   /** Response object to send if someone requested soup from an empty Menu */
-  public record ParseFailureResponse(String response_type) {
-    public ParseFailureResponse() {
+  public record SearchFailureResponse(String response_type) {
+    public SearchFailureResponse() {
       this("error");
     }
 
@@ -98,7 +110,7 @@ public class ViewCSVFileHandler implements Route {
      */
     String serialize() {
       Moshi moshi = new Moshi.Builder().build();
-      return moshi.adapter(ParseFailureResponse.class).toJson(this);
+      return moshi.adapter(SearchFailureResponse.class).toJson(this);
     }
   }
 }

@@ -48,8 +48,7 @@ public class ViewCSVFileHandler implements Route {
       // Sends a request to the API and receives JSON back
       // Make this work with loading a CSVfile from a path+name
       //      String csvfileJson = this.sendRequest(fileLocation);
-      CSVParse<List<String>> parser = this.data.getCSVParser();
-      List<List<String>> objectList = parser.parse();
+      List<List<String>> objectList = this.data.parseCSV();
 
       // Adds results to the responseMap
       responseMap.put("data", objectList);

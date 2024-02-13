@@ -53,8 +53,7 @@ public class SearchCSVFileHandler implements Route {
     // Creates a hashmap to store the results of the request
     Map<String, Object> responseMap = new HashMap<>();
     try {
-      CSVParse<List<String>> parser = this.data.getCSVParser();
-      List<List<String>> objectList = parser.parse();
+      List<List<String>> objectList = this.data.parseCSV();
       // NEED TO ERROR CHECK BELOW
       boolean booleanHeaderP = Boolean.parseBoolean(booleanHeader);
       boolean booleanIdentifierAnIntP = Boolean.parseBoolean(booleanIdentifierAnInt);

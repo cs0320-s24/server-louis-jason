@@ -22,16 +22,16 @@ public class BroadbandAPIUtilities {
      * @param jsonBroadband
      * @return
      */
-    public static HashMap<String, Integer> deserializeBroadband(String jsonBroadband) {
+    public static HashMap<String, String> deserializeBroadband(String jsonBroadband) {
         try {
             // Initializes Moshi
             Moshi moshi = new Moshi.Builder().build();
-            Type hashmapType = Types.newParameterizedType(Map.class, String.class, Integer.class);
+            Type hashmapType = Types.newParameterizedType(Map.class, String.class, String.class);
 
             // Initializes an adapter to an Activity class then uses it to parse the JSON.
-            JsonAdapter<HashMap<String,Integer>> adapter = moshi.adapter(hashmapType);
+            JsonAdapter<HashMap<String,String>> adapter = moshi.adapter(hashmapType);
 
-            HashMap<String, Integer> mapped = adapter.fromJson(jsonBroadband);
+            HashMap<String, String> mapped = adapter.fromJson(jsonBroadband);
 
             return mapped;
         }
@@ -40,7 +40,8 @@ public class BroadbandAPIUtilities {
         // the error instead of pushing it up.
         catch (IOException e) {
             e.printStackTrace();
-            return new HashMap<String, Integer>();
+            return new HashMap<String, String>();
         }
     }
+
 }

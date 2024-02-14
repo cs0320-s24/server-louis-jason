@@ -1,6 +1,5 @@
 package Server;
 
-import Parser.CSVParse;
 import Searcher.Search;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;

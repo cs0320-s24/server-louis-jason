@@ -3,6 +3,7 @@ package Server;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -72,6 +73,27 @@ public class BroadbandAPIUtilities {
     catch (IOException e) {
       e.printStackTrace();
       return new HashMap<String, String>();
+    }
+  }
+  public static List<List<String>> deserializeBroadbandData(String jsonBroadband) {
+    try {
+      // Initializes Moshi
+      Moshi moshi = new Moshi.Builder().build();
+      // Type hashmapType = Types.newParameterizedType(Map.class, String.class, String.class);
+
+      // Initializes an adapter to an Activity class then uses it to parse the JSON.
+
+      JsonAdapter<List> adapter = moshi.adapter(List.class);
+
+      List<List<String>> mapped = adapter.fromJson(jsonBroadband);
+      return mapped;
+    }
+    // Returns an empty activity... Probably not the best handling of this error case...
+    // Notice an alternative error throwing case to the one done in OrderHandler. This catches
+    // the error instead of pushing it up.
+    catch (IOException e) {
+      e.printStackTrace();
+        return new ArrayList<>();
     }
   }
 }

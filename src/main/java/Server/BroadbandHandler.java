@@ -84,11 +84,14 @@ public class BroadbandHandler implements Route {
       String countyCode = countyNumberMap.get(county);
       // WE WILL HAVE TO DESERIALIZE AND SERIALIZE THE BROADBANDDATA BELOW
       String broadbandData = this.sendRequest(countyCode, stateCode);
+      List<List<String>> deserializedBroadbandData = BroadbandAPIUtilities.deserializeBroadbandData(broadbandData);
       // Deserializes JSON into an CSVFile
       // CSVFile csvfile = CSVFileAPIUtilities.deserializeCSVFile(csvfileJson);
       // Adds results to the responseMap
       responseMap.put("result", "success");
-      responseMap.put("broadband", broadbandData);
+      responseMap.put("state", state);
+      responseMap.put("county", county);
+      responseMap.put("broadband", deserializedBroadbandData.get(1).get(1));
       return responseMap;
     } catch (Exception e) {
       e.printStackTrace();

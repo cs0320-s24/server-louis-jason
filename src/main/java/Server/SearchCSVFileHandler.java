@@ -35,19 +35,11 @@ public class SearchCSVFileHandler implements Route {
 
   @Override
   public Object handle(Request request, Response response) {
-    // If you are interested in how parameters are received, try commenting out and
-    // printing these lines! Notice that requesting a specific parameter requires that parameter
-    // to be fulfilled.
-    // If you specify a queryParam, you can access it by appending ?parameterName=name to the
-    // endpoint
-    // ex. http://localhost:3232/activity?participants=num
-    //    Set<String> params = request.queryParams();
-    //     System.out.println(params);
+
     String value = request.queryParams("value");
     String booleanHeader = request.queryParams("booleanHeader");
     String identifier = request.queryParams("identifier");
     String booleanIdentifierAnInt = request.queryParams("booleanIdentifierAnInt");
-    //     System.out.println(participants);
 
     // Creates a hashmap to store the results of the request
     Map<String, Object> responseMap = new HashMap<>();

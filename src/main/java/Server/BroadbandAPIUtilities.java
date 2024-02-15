@@ -23,10 +23,8 @@ public class BroadbandAPIUtilities {
     try {
       // Initializes Moshi
       Moshi moshi = new Moshi.Builder().build();
-      // Type hashmapType = Types.newParameterizedType(Map.class, String.class, String.class);
 
       // Initializes an adapter to an Activity class then uses it to parse the JSON.
-
       JsonAdapter<List> adapter = moshi.adapter(List.class);
 
       List<List<String>> mapped = adapter.fromJson(jsonBroadband);
@@ -49,10 +47,8 @@ public class BroadbandAPIUtilities {
     try {
       // Initializes Moshi
       Moshi moshi = new Moshi.Builder().build();
-      // Type hashmapType = Types.newParameterizedType(Map.class, String.class, String.class);
 
       // Initializes an adapter to an Activity class then uses it to parse the JSON.
-
       JsonAdapter<List> adapter = moshi.adapter(List.class);
 
       List<List<String>> mapped = adapter.fromJson(jsonBroadband);
@@ -79,10 +75,8 @@ public class BroadbandAPIUtilities {
     try {
       // Initializes Moshi
       Moshi moshi = new Moshi.Builder().build();
-      // Type hashmapType = Types.newParameterizedType(Map.class, String.class, String.class);
 
       // Initializes an adapter to an Activity class then uses it to parse the JSON.
-
       JsonAdapter<List> adapter = moshi.adapter(List.class);
 
       List<List<String>> mapped = adapter.fromJson(jsonBroadband);

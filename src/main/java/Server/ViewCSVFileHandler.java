@@ -34,21 +34,11 @@ public class ViewCSVFileHandler implements Route {
 
   @Override
   public Object handle(Request request, Response response) {
-    // If you are interested in how parameters are received, try commenting out and
-    // printing these lines! Notice that requesting a specific parameter requires that parameter
-    // to be fulfilled.
-    // If you specify a queryParam, you can access it by appending ?parameterName=name to the
-    // endpoint
-    // ex. http://localhost:3232/activity?participants=num
 
     // Creates a hashmap to store the results of the request
     Map<String, Object> responseMap = new HashMap<>();
     try {
-      // Sends a request to the API and receives JSON back
-      // Make this work with loading a CSVfile from a path+name
-      //      String csvfileJson = this.sendRequest(fileLocation);
       List<List<String>> objectList = this.data.parseCSV();
-
       // Adds results to the responseMap
       responseMap.put("data", objectList);
       return new ParseSuccessResponse(responseMap).serialize();

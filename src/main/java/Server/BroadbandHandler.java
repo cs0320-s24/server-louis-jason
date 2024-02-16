@@ -28,17 +28,12 @@ public class BroadbandHandler implements Route {
    * @param request The request object providing information about the HTTP request
    * @param response The response object providing functionality for modifying the response
    */
-  private HashMap<String, String> stateCodeMap;
-  private BroadbandInterface<String,String> cachedBroadbandSearcher;
+  private BroadbandInterface<String, BroadbandInfo> cachedBroadbandSearcher;
 
-  public BroadbandHandler(BroadbandInterface<String,String> cachedBroadbandSearcher) {
+  private BroadbandInfo broadbandInfo;
+
+  public BroadbandHandler(BroadbandInterface<String,BroadbandInfo> cachedBroadbandSearcher) {
     this.cachedBroadbandSearcher = cachedBroadbandSearcher;
-    try {
-      this.stateCodeMap = getStateCodes();
-    } catch (Exception e) {
-      e.printStackTrace();
-      this.stateCodeMap = new HashMap<>();
-    }
   }
 
   @Override
@@ -48,38 +43,31 @@ public class BroadbandHandler implements Route {
     // Creates a hashmap to store the results of the request
     Map<String, Object> responseMap = new HashMap<>();
     try {
-      if (state.contains("%20")) {
-        String[] stateArr = state.split("%20");
-        state = stateArr[0] + " " + stateArr[1];
-      }
-      if (county.contains("%20")) {
-        String[] countyArr = county.split("%20");
-        String countyPlace = "";
-        for (String string : countyArr) {
-          countyPlace = countyPlace + string;
-        }
-        county = countyPlace;
-      }
-      String stateCode = this.stateCodeMap.get(state);
+//      if (state.contains("%20")) {
+//        String[] stateArr = state.split("%20");
+//        state = stateArr[0] + " " + stateArr[1];
+//      }
+//      if (county.contains("%20")) {
+//        String[] countyArr = county.split("%20");
+//        StringBuilder countyPlace = new StringBuilder();
+//        for (String string : countyArr) {
+//          countyPlace.append(" ").append(string);
+//        }
+//        county = countyPlace.toString().trim();
+//      }
 
+      BroadbandInfo broadbandToSearch = BroadbandAPIUtilities.makeBroadbandInfo(county, state);
       //code below should also probably be cached since also accessing API
-      HashMap<String, String> countyNumberMap =
-          BroadbandAPIUtilities.deserializeBroadbandCounty(sendCountyRequest(stateCode));
-      String countyCode = countyNumberMap.get(county);
+      String broadbandResult = this.cachedBroadbandSearcher.search(broadbandToSearch);
 
-      // WE WILL HAVE TO DESERIALIZE AND SERIALIZE THE BROADBANDDATA BELOW
-      String countyAndStateCode = countyCode + "," + stateCode;
-      String broadbandData = this.cachedBroadbandSearcher.search(countyAndStateCode);
-      //String broadbandData = this.sendRequest(countyCode, stateCode);
-
-      List<List<String>> deserializedBroadbandData = BroadbandAPIUtilities.deserializeBroadbandData(broadbandData);
+      List<List<String>> deserializedBroadbandData = BroadbandAPIUtilities.deserializeBroadbandData(broadbandResult);
       // Adds results to the responseMap
       responseMap.put("result", "success");
-      responseMap.put("state", state);
       //do we need to worry if they put a * as the county? if so
       //below is not good code cause what if they put in a * for county then there would be multiple broadbands and multiple counties
+      responseMap.put("state", state);
       responseMap.put("county", county);
-      responseMap.put("broadband", deserializedBroadbandData.get(1).get(1));
+      responseMap.put("data", deserializedBroadbandData);
       return responseMap;
     } catch (Exception e) {
       e.printStackTrace();
@@ -113,44 +101,44 @@ public class BroadbandHandler implements Route {
 //    return sentCensusResponse.body();
 //  }
 
-  private String sendCountyRequest(String state)
-      throws URISyntaxException, IOException, InterruptedException {
+//  private String sendCountyRequest(String state)
+//      throws URISyntaxException, IOException, InterruptedException {
+//
+//    HttpRequest retrieveCountyNums =
+//        HttpRequest.newBuilder()
+//            .uri(
+//                new URI(
+//                    "https://api.census.gov/data/2010/dec/sf1?get=NAME&for=county:*&in=state:"
+//                        + state))
+//            .GET()
+//            .build();
+//
+//    // Send that API request then store the response in this variable. Note the generic type.
+//    HttpResponse<String> countyNums =
+//        HttpClient.newBuilder()
+//            .build()
+//            .send(retrieveCountyNums, HttpResponse.BodyHandlers.ofString());
+//
+//    return countyNums.body();
+//  }
 
-    HttpRequest retrieveCountyNums =
-        HttpRequest.newBuilder()
-            .uri(
-                new URI(
-                    "https://api.census.gov/data/2010/dec/sf1?get=NAME&for=county:*&in=state:"
-                        + state))
-            .GET()
-            .build();
-
-    // Send that API request then store the response in this variable. Note the generic type.
-    HttpResponse<String> countyNums =
-        HttpClient.newBuilder()
-            .build()
-            .send(retrieveCountyNums, HttpResponse.BodyHandlers.ofString());
-
-    return countyNums.body();
-  }
-
-  private HashMap<String, String> getStateCodes()
-      throws URISyntaxException, IOException, InterruptedException {
-
-    HttpRequest retrieveStateNums =
-        HttpRequest.newBuilder()
-            .uri(new URI("https://api.census.gov/data/2010/dec/sf1?get=NAME&for=state:*"))
-            .GET()
-            .build();
-
-    // Send that API request then store the response in this variable. Note the generic type.
-    HttpResponse<String> stateNums =
-        HttpClient.newBuilder()
-            .build()
-            .send(retrieveStateNums, HttpResponse.BodyHandlers.ofString());
-
-    HashMap<String, String> stateCodesMap =
-        BroadbandAPIUtilities.deserializeBroadband(stateNums.body());
-    return stateCodesMap;
-  }
+//  private HashMap<String, String> getStateCodes()
+//      throws URISyntaxException, IOException, InterruptedException {
+//
+//    HttpRequest retrieveStateNums =
+//        HttpRequest.newBuilder()
+//            .uri(new URI("https://api.census.gov/data/2010/dec/sf1?get=NAME&for=state:*"))
+//            .GET()
+//            .build();
+//
+//    // Send that API request then store the response in this variable. Note the generic type.
+//    HttpResponse<String> stateNums =
+//        HttpClient.newBuilder()
+//            .build()
+//            .send(retrieveStateNums, HttpResponse.BodyHandlers.ofString());
+//
+//    HashMap<String, String> stateCodesMap =
+//        BroadbandAPIUtilities.deserializeBroadband(stateNums.body());
+//    return stateCodesMap;
+//  }
 }

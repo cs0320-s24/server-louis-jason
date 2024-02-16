@@ -7,7 +7,7 @@ import com.google.common.cache.LoadingCache;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
-public class CachedBroadbandSearch implements BroadbandInterface<String, String> {
+public class CachedBroadbandSearch implements BroadbandInterface<String, BroadbandInfo> {
 
     /**
      * A class that wraps a FileServer instance and caches responses
@@ -17,8 +17,8 @@ public class CachedBroadbandSearch implements BroadbandInterface<String, String>
      *
      * This version uses a Guava cache class to manage the cache.
      */
-        private final BroadbandInterface<String,String> wrappedSearcher;
-        private final LoadingCache<String, String> cache;
+        private final BroadbandInterface<String, BroadbandInfo> wrappedSearcher;
+        private final LoadingCache<BroadbandInfo, String> cache;
 
         /**
          * Proxy class: wrap an instance of Searcher (of any kind) and cache
@@ -28,10 +28,10 @@ public class CachedBroadbandSearch implements BroadbandInterface<String, String>
          * HashMap, but then we'd have to handle "eviction" ourselves.
          * Lots of libraries exist. We're using Guava here, to demo the
          * strategy pattern.
-         *
-         * @param toWrap the Searcher to wrap
+         *        * @param toWrap the Searcher to wrap
          */
-        public CachedBroadbandSearch(BroadbandInterface<String,String> toWrap, int maxSize, int expireAfterWrite) {
+        public CachedBroadbandSearch(BroadbandInterface<String, BroadbandInfo> toWrap,
+                                     int maxSize, int expireAfterWrite) {
             this.wrappedSearcher = toWrap;
 
             // Look at the docs -- there are lots of builder parameters you can use
@@ -48,7 +48,7 @@ public class CachedBroadbandSearch implements BroadbandInterface<String, String>
                             // it's asked for something it doesn't have?
                             new CacheLoader<>() {
                                 @Override
-                                public String load(String key)  {
+                                public String load(BroadbandInfo key)  {
                                     System.out.println("called load for: "+key);
                                     // If this isn't yet present in the cache, load it:
                                     return wrappedSearcher.search(key);
@@ -57,7 +57,7 @@ public class CachedBroadbandSearch implements BroadbandInterface<String, String>
         }
 
         @Override
-        public String search(String target) {
+        public String search(BroadbandInfo target) {
             // "get" is designed for concurrent situations; for today, use getUnchecked:
             String result = cache.getUnchecked(target);
             // For debugging and demo (would remove in a "real" version):

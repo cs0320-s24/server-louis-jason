@@ -46,10 +46,10 @@ public class LoadCSVFileHandler implements Route {
     Map<String, Object> responseMap = new HashMap<>();
     try {
       // Sends a request to the API and receives JSON back
-      CSVParse<List<String>> csvfileParser = this.sendRequest(fileLocation);
+      CSVParse<List<String>> csvFileParser = this.sendRequest(fileLocation);
       // Adds results to the responseMap
       responseMap.put("result", "success");
-      this.data.setCSVParser(csvfileParser);
+      this.data.setCSVParser(csvFileParser);
       return responseMap;
     } catch (Exception e) {
       e.printStackTrace();

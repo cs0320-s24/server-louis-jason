@@ -24,9 +24,9 @@ public class CSVFileAPIUtilities {
       // Initializes an adapter to an Activity class then uses it to parse the JSON.
       JsonAdapter<CSVFile> adapter = moshi.adapter(CSVFile.class);
 
-      CSVFile csvfile = adapter.fromJson(jsonCSVFile);
+      CSVFile csvFile = adapter.fromJson(jsonCSVFile);
 
-      return csvfile;
+      return csvFile;
     }
     // Returns an empty activity... Probably not the best handling of this error case...
     // Notice an alternative error throwing case to the one done in OrderHandler. This catches

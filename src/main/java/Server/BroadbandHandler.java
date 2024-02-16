@@ -38,25 +38,25 @@ public class BroadbandHandler implements Route {
 
   @Override
   public Object handle(Request request, Response response) {
-    String county = request.queryParams("county");
-    String state = request.queryParams("state");
+    String countyName = request.queryParams("county");
+    String stateName = request.queryParams("state");
     // Creates a hashmap to store the results of the request
     Map<String, Object> responseMap = new HashMap<>();
     try {
-//      if (state.contains("%20")) {
-//        String[] stateArr = state.split("%20");
-//        state = stateArr[0] + " " + stateArr[1];
-//      }
-//      if (county.contains("%20")) {
-//        String[] countyArr = county.split("%20");
-//        StringBuilder countyPlace = new StringBuilder();
-//        for (String string : countyArr) {
-//          countyPlace.append(" ").append(string);
-//        }
-//        county = countyPlace.toString().trim();
-//      }
+      if (stateName.contains("%20")) {
+        String[] stateArr = stateName.split("%20");
+        stateName = stateArr[0] + " " + stateArr[1];
+      }
+      if (countyName.contains("%20")) {
+        String[] countyArr = countyName.split("%20");
+        StringBuilder countyPlace = new StringBuilder();
+        for (String string : countyArr) {
+          countyPlace.append(" ").append(string);
+        }
+        countyName = countyPlace.toString().trim();
+      }
 
-      BroadbandInfo broadbandToSearch = BroadbandAPIUtilities.makeBroadbandInfo(county, state);
+      BroadbandInfo broadbandToSearch = BroadbandAPIUtilities.makeBroadbandInfo(countyName, stateName);
       //code below should also probably be cached since also accessing API
       String broadbandResult = this.cachedBroadbandSearcher.search(broadbandToSearch);
 
@@ -65,8 +65,8 @@ public class BroadbandHandler implements Route {
       responseMap.put("result", "success");
       //do we need to worry if they put a * as the county? if so
       //below is not good code cause what if they put in a * for county then there would be multiple broadbands and multiple counties
-      responseMap.put("state", state);
-      responseMap.put("county", county);
+      responseMap.put("state", stateName);
+      responseMap.put("county", countyName);
       responseMap.put("data", deserializedBroadbandData);
       return responseMap;
     } catch (Exception e) {

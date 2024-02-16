@@ -2,6 +2,8 @@ package Server;
 
 import static spark.Spark.after;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import spark.Spark;
 
@@ -18,7 +20,7 @@ public class Server {
   // TODO 0: Read through this class and determine the shape of this project...
   // What are the endpoints that we can access... What happens if you go to them?
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws URISyntaxException, IOException, InterruptedException {
     DataWrapper<List<String>> dataWrapper = new DataWrapper<List<String>>(null);
     CachedBroadbandSearch cachedBroadbandSearch = new CachedBroadbandSearch(new BroadbandSearch(), 10, 1);
     int port = 3232;

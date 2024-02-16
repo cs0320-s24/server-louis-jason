@@ -7,6 +7,8 @@ public class BroadbandInfo {
     private float usage;
     private String county;
     private String state;
+    private String countyCode;
+    private String stateCode;
 
 
     public BroadbandInfo() {}
@@ -17,16 +19,47 @@ public class BroadbandInfo {
         this.state = state;
     }
 
-    public String getCounty() {
+    public String getCountyCode() {
+        return this.countyCode;
+    }
+
+    public String getStateCode() {
+        return this.stateCode;
+    }
+
+    public String getCountyName() {
         return this.county;
     }
 
-    public String getState() {
+    public String getStateName() {
         return this.state;
     }
 
     @Override
     public String toString() {
-        return this.county + this.state;
+        return this.county + "," + this.state;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof BroadbandInfo)) {
+            return false;
+        }
+
+        BroadbandInfo oBroadbandInfo = (BroadbandInfo) o;
+
+        System.out.println(o.toString());
+        System.out.println(this.toString());
+
+        return this.toString().equals(oBroadbandInfo.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
     }
 }

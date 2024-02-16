@@ -4,6 +4,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
@@ -48,8 +50,8 @@ public class CachedBroadbandSearch implements BroadbandInterface<String, Broadba
                             // it's asked for something it doesn't have?
                             new CacheLoader<>() {
                                 @Override
-                                public String load(BroadbandInfo key)  {
-                                    System.out.println("called load for: "+key);
+                                public String load(BroadbandInfo key) throws URISyntaxException, IOException, InterruptedException {
+                                    System.out.println("called load for: "+key.getCountyName()+", "+key.getStateName());
                                     // If this isn't yet present in the cache, load it:
                                     return wrappedSearcher.search(key);
                                 }

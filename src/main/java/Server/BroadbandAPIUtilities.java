@@ -46,7 +46,32 @@ public class BroadbandAPIUtilities {
     }
   }
 
-  /*
+  public static HashMap<String, String> deserializeBroadbandIntoStateMap(String jsonBroadband) {
+    try {
+      // Initializes Moshi
+      Moshi moshi = new Moshi.Builder().build();
+
+      // Initializes an adapter to an Activity class then uses it to parse the JSON.
+      JsonAdapter<List> adapter = moshi.adapter(List.class);
+
+      List<List<String>> mapped = adapter.fromJson(jsonBroadband);
+      HashMap<String, String> stateMap = new HashMap<>();
+      for (int i = 0; i < mapped.size(); i++) {
+        stateMap.put(mapped.get(i).get(0), mapped.get(i).get(1));
+      }
+
+      return stateMap;
+    }
+    // Returns an empty activity... Probably not the best handling of this error case...
+    // Notice an alternative error throwing case to the one done in OrderHandler. This catches
+    // the error instead of pushing it up.
+    catch (IOException e) {
+      e.printStackTrace();
+      return new HashMap<String, String>();
+    }
+  }
+
+
   public static HashMap<String, String> deserializeBroadbandCounty(String jsonBroadband) {
     try {
       // Initializes Moshi
@@ -76,7 +101,7 @@ public class BroadbandAPIUtilities {
     }
   }
 
-   */
+
   public static List<List<String>> deserializeBroadbandData(String jsonBroadband) {
     try {
       // Initializes Moshi

@@ -59,15 +59,33 @@ public class BroadbandHandler implements Route {
       BroadbandInfo broadbandToSearch = BroadbandAPIUtilities.makeBroadbandInfo(countyName, stateName);
       //code below should also probably be cached since also accessing API
       String broadbandResult = this.cachedBroadbandSearcher.search(broadbandToSearch);
-
+      System.out.println(broadbandResult);
       List<List<String>> deserializedBroadbandData = BroadbandAPIUtilities.deserializeBroadbandData(broadbandResult);
       // Adds results to the responseMap
-      responseMap.put("result", "success");
+      if (deserializedBroadbandData.isEmpty()){
+        responseMap.put("result", "Exception: error_datasource");
+      }
+      else {
+        responseMap.put("result", "success");
+        if (countyName.equals("*")){
+          List<List<String>> broadBandDataReturn = new ArrayList<>();
+          for (int i = 1; i<deserializedBroadbandData.size(); i++){
+            List<String> oneCountyData = new ArrayList<>();
+            oneCountyData.add(deserializedBroadbandData.get(i).get(0));
+            oneCountyData.add(deserializedBroadbandData.get(i).get(1));
+            broadBandDataReturn.add(oneCountyData);
+          }
+          responseMap.put("broadband data", broadBandDataReturn);
+        }
+        else {
+          responseMap.put("broadband data", deserializedBroadbandData.get(1).get(1));
+        }
+      }
       //do we need to worry if they put a * as the county? if so
       //below is not good code cause what if they put in a * for county then there would be multiple broadbands and multiple counties
-      responseMap.put("state", stateName);
-      responseMap.put("county", countyName);
-      responseMap.put("data", deserializedBroadbandData);
+      responseMap.put("state entered", stateName);
+      responseMap.put("county entered", countyName);
+      responseMap.put("date data was retrieved on", java.time.LocalDateTime.now());
       return responseMap;
     } catch (Exception e) {
       e.printStackTrace();

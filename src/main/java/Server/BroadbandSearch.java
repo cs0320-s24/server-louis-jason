@@ -22,8 +22,14 @@ public class BroadbandSearch implements BroadbandInterface<String, BroadbandInfo
         String stateName = broadbandInfo.getStateName();
 
         String stateCode = this.stateCodesMap.get(stateName);
-        String countyCode = BroadbandAPIUtilities.deserializeBroadbandCounty(
-                this.getCountyCodes(stateCode)).get(countyName);
+        String countyCode;
+        if (countyName.equals("*")){
+            countyCode = "*";
+        }
+        else {
+            countyCode = BroadbandAPIUtilities.deserializeBroadbandCounty(
+                    this.getCountyCodes(stateCode)).get(countyName);
+        }
 
         String broadbandData;
         try {

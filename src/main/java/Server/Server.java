@@ -5,6 +5,15 @@ import static spark.Spark.after;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+
+import JsonTypes.BroadbandInfo;
+import Server.Broadband.BroadbandHandler;
+import Server.Broadband.BroadbandSearch;
+import Server.Cache.CachedSearcher;
+import Server.Csv.CSVDataWrapper;
+import Server.Csv.LoadCSVFileHandler;
+import Server.Csv.SearchCSVFileHandler;
+import Server.Csv.ViewCSVFileHandler;
 import spark.Spark;
 
 /** Top-level class. Contains the main() method which starts Spark and runs the various handlers */
@@ -12,9 +21,14 @@ public class Server {
 
   public static void main(String[] args)
       throws URISyntaxException, IOException, InterruptedException {
-    DataWrapper<List<String>> dataWrapper = new DataWrapper<List<String>>(null);
-    CachedBroadbandSearch cachedBroadbandSearch =
-        new CachedBroadbandSearch(new BroadbandSearch(), 10, 1);
+    // Create a CSV File wrapper for our future parser.
+    CSVDataWrapper<List<String>> dataWrapper = new CSVDataWrapper<List<String>>(null);
+
+    // Create a cached searcher for BroadbandInfo. Set to 10 max cache size and 1 minute expirations.
+    CachedSearcher<String, BroadbandInfo> cachedBroadbandSearch =
+        new CachedSearcher<>(new BroadbandSearch(), 10, 1);
+
+    // Spark initialization
     int port = 3232;
     Spark.port(port);
 
@@ -33,7 +47,7 @@ public class Server {
     Spark.init();
     Spark.awaitInitialization();
 
-    // Notice this link alone leads to a 404... Why is that?
+    // Notify of success
     System.out.println("Server started at http://localhost:" + port);
   }
 }

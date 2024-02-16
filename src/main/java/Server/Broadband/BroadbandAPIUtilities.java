@@ -1,5 +1,6 @@
-package Server;
+package Server.Broadband;
 
+import JsonTypes.BroadbandInfo;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import java.io.IOException;

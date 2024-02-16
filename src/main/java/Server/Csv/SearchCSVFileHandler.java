@@ -1,4 +1,4 @@
-package Server;
+package Server.Csv;
 
 import Searcher.Search;
 import com.squareup.moshi.JsonAdapter;
@@ -16,7 +16,7 @@ import spark.Route;
  */
 public class SearchCSVFileHandler implements Route {
 
-  private DataWrapper<List<String>> data;
+  private CSVDataWrapper<List<String>> data;
 
   /**
    * This is the constructor of the SearchCSVFileHandler. This is where we set up the instance of
@@ -24,7 +24,7 @@ public class SearchCSVFileHandler implements Route {
    *
    * @param data
    */
-  public SearchCSVFileHandler(DataWrapper<List<String>> data) {
+  public SearchCSVFileHandler(CSVDataWrapper<List<String>> data) {
     this.data = data;
   }
 

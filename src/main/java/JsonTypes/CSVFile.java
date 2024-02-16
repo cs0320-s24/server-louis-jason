@@ -1,4 +1,4 @@
-package CSVFile;
+package JsonTypes;
 
 public class CSVFile {
   private String path;

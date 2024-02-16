@@ -1,4 +1,4 @@
-package Server;
+package Server.Csv;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -14,7 +14,7 @@ import spark.Route;
  * in the server class.
  */
 public class ViewCSVFileHandler implements Route {
-  private DataWrapper<List<String>> data;
+  private CSVDataWrapper<List<String>> data;
 
   /**
    * This is the constructor of the ViewCSVFileHandler. This is where we set up the instance of
@@ -22,7 +22,7 @@ public class ViewCSVFileHandler implements Route {
    *
    * @param data
    */
-  public ViewCSVFileHandler(DataWrapper<List<String>> data) {
+  public ViewCSVFileHandler(CSVDataWrapper<List<String>> data) {
     this.data = data;
   }
 

@@ -1,6 +1,9 @@
-package Server;
+package Server.Broadband;
 
 import java.util.*;
+
+import JsonTypes.BroadbandInfo;
+import Server.Cache.SearchInterface;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -19,14 +22,14 @@ public class BroadbandHandler implements Route {
    * @param request The request object providing information about the HTTP request
    * @param response The response object providing functionality for modifying the response
    */
-  private BroadbandInterface<String, BroadbandInfo> cachedBroadbandSearcher;
+  private SearchInterface<String, BroadbandInfo> cachedBroadbandSearcher;
 
   /**
    * Constructor takes in an instance of BroadbandInterface, used for caching
    *
    * @param cachedBroadbandSearcher
    */
-  public BroadbandHandler(BroadbandInterface<String, BroadbandInfo> cachedBroadbandSearcher) {
+  public BroadbandHandler(SearchInterface<String, BroadbandInfo> cachedBroadbandSearcher) {
     this.cachedBroadbandSearcher = cachedBroadbandSearcher;
   }
 

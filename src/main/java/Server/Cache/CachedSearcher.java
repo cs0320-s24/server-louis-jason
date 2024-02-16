@@ -1,5 +1,6 @@
-package Server;
+package Server.Cache;
 
+import JsonTypes.BroadbandInfo;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -14,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * BroadbandInterface it is wrapping. The cache can be customized by its caller by passing in
  * maxSize and expireAfterWrite arguments.
  */
-public class CachedBroadbandSearch implements BroadbandInterface<String, BroadbandInfo> {
+public class CachedSearcher<RESULT, TARGET> implements SearchInterface<RESULT, TARGET> {
 
   /**
    * A class that wraps a BroadbandInterface instance and caches responses for efficiency. Notice
@@ -23,9 +24,9 @@ public class CachedBroadbandSearch implements BroadbandInterface<String, Broadba
    *
    * <p>This version uses a Guava cache class to manage the cache.
    */
-  private final BroadbandInterface<String, BroadbandInfo> wrappedSearcher;
+  private final SearchInterface<RESULT, TARGET> wrappedSearcher;
 
-  private final LoadingCache<BroadbandInfo, String> cache;
+  private final LoadingCache<TARGET, RESULT> cache;
 
   /**
    * Proxy class: wrap an instance of BroadbandInterface (of any kind) and cache its results.
@@ -34,8 +35,8 @@ public class CachedBroadbandSearch implements BroadbandInterface<String, Broadba
    * @param maxSize maxSize wanted of the cache
    * @param expireAfterWrite how long it should be in the cache for
    */
-  public CachedBroadbandSearch(
-      BroadbandInterface<String, BroadbandInfo> toWrap, int maxSize, int expireAfterWrite) {
+  public CachedSearcher(
+          SearchInterface<RESULT, TARGET> toWrap, int maxSize, int expireAfterWrite) {
     this.wrappedSearcher = toWrap;
     this.cache =
         CacheBuilder.newBuilder()
@@ -50,10 +51,10 @@ public class CachedBroadbandSearch implements BroadbandInterface<String, Broadba
                 // it's asked for something it doesn't have?
                 new CacheLoader<>() {
                   @Override
-                  public String load(BroadbandInfo key)
+                  public RESULT load(TARGET key)
                       throws URISyntaxException, IOException, InterruptedException {
                     System.out.println(
-                        "called load for: " + key.getCountyName() + ", " + key.getStateName());
+                        "called load for: " + key.toString());
                     // If this isn't yet present in the cache, load it:
                     return wrappedSearcher.search(key);
                   }
@@ -67,9 +68,9 @@ public class CachedBroadbandSearch implements BroadbandInterface<String, Broadba
    * @return
    */
   @Override
-  public String search(BroadbandInfo target) {
+  public RESULT search(TARGET target) {
     // "get" is designed for concurrent situations; for today, use getUnchecked:
-    String result = cache.getUnchecked(target);
+    RESULT result = cache.getUnchecked(target);
     // For debugging and demo (would remove in a "real" version):
     System.out.println(cache.stats());
     return result;

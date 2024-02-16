@@ -1,4 +1,4 @@
-package Server;
+package Server.Csv;
 
 import Creator.Creator;
 import Parser.CSVParse;
@@ -24,7 +24,7 @@ public class LoadCSVFileHandler implements Route {
    * @param request The request object providing information about the HTTP request
    * @param response The response object providing functionality for modifying the response
    */
-  private DataWrapper<List<String>> data;
+  private CSVDataWrapper<List<String>> data;
 
   /**
    * This is the constructor of the LoadCSVFileHandler. This is where we set up the instance of
@@ -32,7 +32,7 @@ public class LoadCSVFileHandler implements Route {
    *
    * @param data
    */
-  public LoadCSVFileHandler(DataWrapper<List<String>> data) {
+  public LoadCSVFileHandler(CSVDataWrapper<List<String>> data) {
     this.data = data;
   }
 
@@ -46,7 +46,7 @@ public class LoadCSVFileHandler implements Route {
   @Override
   public Object handle(Request request, Response response) {
 
-    // requests pasesd in argument
+    // requests passed in argument
     String path = request.queryParams("path");
     String fileLocation = "data/" + path;
 

@@ -1,4 +1,7 @@
-package Server;
+package Server.Broadband;
+
+import JsonTypes.BroadbandInfo;
+import Server.Cache.SearchInterface;
 
 import java.io.IOException;
 import java.net.URI;
@@ -15,7 +18,7 @@ import java.util.HashMap;
  * are only requested for once in the constructor. The other are requested if it is not in the cache
  * already.
  */
-public class BroadbandSearch implements BroadbandInterface<String, BroadbandInfo> {
+public class BroadbandSearch implements SearchInterface<String, BroadbandInfo> {
 
   // Hashmap for the statecodes and its respective states
   private final HashMap<String, String> stateCodesMap;

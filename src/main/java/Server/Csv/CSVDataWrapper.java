@@ -1,4 +1,4 @@
-package Server;
+package Server.Csv;
 
 import Creator.FactoryFailureException;
 import Parser.CSVParse;
@@ -12,12 +12,12 @@ import java.util.List;
  *
  * @param <T>
  */
-public class DataWrapper<T> {
+public class CSVDataWrapper<T> {
   private CSVParse<T> parser;
   private List<T> parsedData = null;
 
   /** Constructor wraps the instance of Parse */
-  public DataWrapper(CSVParse<T> parser) {
+  public CSVDataWrapper(CSVParse<T> parser) {
     this.parser = parser;
   }
 

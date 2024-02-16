@@ -10,48 +10,49 @@ import spark.Response;
 import spark.Route;
 
 /**
- * This class is used to illustrate how to build and send a GET request then prints the response. It
- * will also demonstrate a simple Moshi deserialization from online data.
+ * This is the ViewCSVHandler class. This class is to handle any requests made to the viewcsv path
+ * in the server class.
  */
-// TODO 1: Check out this Handler. How can we make it only get activities based on participant #?
-// See Documentation here: https://www.boredapi.com/documentation
 public class ViewCSVFileHandler implements Route {
-  /**
-   * This handle method needs to be filled by any class implementing Route. When the path set in
-   * edu.brown.cs.examples.moshiExample.server.Server gets accessed, it will fire the handle method.
-   *
-   * <p>NOTE: beware this "return Object" and "throws Exception" idiom. We need to follow it because
-   * the library uses it, but in general this lowers the protection of the type system.
-   *
-   * @param request The request object providing information about the HTTP request
-   * @param response The response object providing functionality for modifying the response
-   */
   private DataWrapper<List<String>> data;
 
+  /**
+   * This is the constructor of the ViewCSVFileHandler. This is where we set up the instance of
+   * Datawrapper.
+   *
+   * @param data
+   */
   public ViewCSVFileHandler(DataWrapper<List<String>> data) {
     this.data = data;
   }
 
+  /**
+   * This handle method needs to be filled by any class implementing Route. When the path set in
+   * Server gets accessed, it will fire the handle method. This handle method is used for viewing a
+   * CSV file that was loaded in.
+   *
+   * @param request The request object providing information about the HTTP request
+   * @param response The response object providing functionality for modifying the response
+   */
   @Override
   public Object handle(Request request, Response response) {
 
     // Creates a hashmap to store the results of the request
     Map<String, Object> responseMap = new HashMap<>();
     try {
+      // get parsed data from the loaded in CSVFile
       List<List<String>> objectList = this.data.parseCSV();
       // Adds results to the responseMap
       responseMap.put("data", objectList);
+      // serialize the responseMap
       return new ParseSuccessResponse(responseMap).serialize();
     } catch (Exception e) {
       e.printStackTrace();
-      // This is a relatively unhelpful exception message. An important part of this sprint will be
-      // in learning to debug correctly by creating your own informative error messages where Spark
-      // falls short.
-      // responseMap.put("result", "Exception");
+      // Error printed and its stack trace
     }
     return new ParseFailureResponse().serialize();
   }
-  /** Response object to send, containing a soup with certain ingredients in it */
+  /** Response object to send, containing the CSVFile to view */
   public record ParseSuccessResponse(String response_type, Map<String, Object> responseMap) {
     public ParseSuccessResponse(Map<String, Object> responseMap) {
       this("success", responseMap);
@@ -75,10 +76,10 @@ public class ViewCSVFileHandler implements Route {
     }
   }
 
-  /** Response object to send if someone requested soup from an empty Menu */
+  /** Response object to send if there was an error */
   public record ParseFailureResponse(String response_type) {
     public ParseFailureResponse() {
-      this("error");
+      this("error: unable to view CSVFile");
     }
 
     /**

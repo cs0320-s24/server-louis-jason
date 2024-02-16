@@ -63,6 +63,14 @@
       <scope>compile</scope>
     </dependency>
 
+    <!-- Google's Guava library contains many useful utilities, including
+          various cache classes. -->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>31.1-jre</version>
+    </dependency>
+
     <!--
                JUnit is a unit testing library for Java.
         -->
@@ -71,14 +79,6 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <version>5.4.0</version>
       <scope>test</scope>
-    </dependency>
-
-    <!-- Google's Guava library contains many useful utilities, including
-          various cache classes. -->
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>31.1-jre</version>
     </dependency>
 
   </dependencies>

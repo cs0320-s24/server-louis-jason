@@ -11,31 +11,34 @@ import spark.Response;
 import spark.Route;
 
 /**
- * This class is used to illustrate how to build and send a GET request then prints the response. It
- * will also demonstrate a simple Moshi deserialization from online data.
+ * This is the SearchCSVHandler class. This class is to handle any requests made to the searchcsv
+ * path in the server class.
  */
-// TODO 1: Check out this Handler. How can we make it only get activities based on participant #?
-// See Documentation here: https://www.boredapi.com/documentation
 public class SearchCSVFileHandler implements Route {
-  /**
-   * This handle method needs to be filled by any class implementing Route. When the path set in
-   * edu.brown.cs.examples.moshiExample.server.Server gets accessed, it will fire the handle method.
-   *
-   * <p>NOTE: beware this "return Object" and "throws Exception" idiom. We need to follow it because
-   * the library uses it, but in general this lowers the protection of the type system.
-   *
-   * @param request The request object providing information about the HTTP request
-   * @param response The response object providing functionality for modifying the response
-   */
+
   private DataWrapper<List<String>> data;
 
+  /**
+   * This is the constructor of the SearchCSVFileHandler. This is where we set up the instance of
+   * Datawrapper.
+   *
+   * @param data
+   */
   public SearchCSVFileHandler(DataWrapper<List<String>> data) {
     this.data = data;
   }
 
+  /**
+   * This handle method needs to be filled by any class implementing Route. When the path set in
+   * Server gets accessed, it will fire the handle method. This handle method is used for searching
+   * a CSV file that was loaded in.
+   *
+   * @param request The request object providing information about the HTTP request
+   * @param response The response object providing functionality for modifying the response
+   */
   @Override
   public Object handle(Request request, Response response) {
-
+    // get values that were passed for the search
     String value = request.queryParams("value");
     String booleanHeader = request.queryParams("booleanHeader");
     String identifier = request.queryParams("identifier");
@@ -44,28 +47,27 @@ public class SearchCSVFileHandler implements Route {
     // Creates a hashmap to store the results of the request
     Map<String, Object> responseMap = new HashMap<>();
     try {
+      // get the parsed list from the datawrapper
       List<List<String>> objectList = this.data.parseCSV();
-      // NEED TO ERROR CHECK BELOW
+      // convert the necessary string arguments into booleans
       boolean booleanHeaderP = Boolean.parseBoolean(booleanHeader);
       boolean booleanIdentifierAnIntP = Boolean.parseBoolean(booleanIdentifierAnInt);
-
+      // create a new searcher with passed in arguments and perform a search
       Search search =
           new Search(value, booleanHeaderP, identifier, booleanIdentifierAnIntP, objectList);
       search.searches();
+      // retrieve the data that was returned from the search
       List<List<String>> dataList = search.getTestList();
       responseMap.put("data", dataList);
       return new SearchSuccessResponse(responseMap).serialize();
     } catch (Exception e) {
       e.printStackTrace();
-      // This is a relatively unhelpful exception message. An important part of this sprint will be
-      // in learning to debug correctly by creating your own informative error messages where Spark
-      // falls short.
-      //      responseMap.put("result", "Exception");
+      // Exception stack trace printed out
     }
     return new SearchFailureResponse().serialize();
   }
 
-  /** Response object to send, containing a soup with certain ingredients in it */
+  /** Response object to send with the information that was requested in the search */
   public record SearchSuccessResponse(String response_type, Map<String, Object> responseMap) {
     public SearchSuccessResponse(Map<String, Object> responseMap) {
       this("success", responseMap);
@@ -89,10 +91,10 @@ public class SearchCSVFileHandler implements Route {
     }
   }
 
-  /** Response object to send if someone requested soup from an empty Menu */
+  /** Response object to send if there was an error */
   public record SearchFailureResponse(String response_type) {
     public SearchFailureResponse() {
-      this("error");
+      this("error: was not able to perform search");
     }
 
     /**

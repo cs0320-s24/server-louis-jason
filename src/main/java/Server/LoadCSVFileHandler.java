@@ -4,65 +4,78 @@ import Creator.Creator;
 import Parser.CSVParse;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
 /**
- * This class is used to illustrate how to build and send a GET request then prints the response. It
- * will also demonstrate a simple Moshi deserialization from online data.
+ * This is the LoadCSVHandler class. This class is to handle any requests made to the loadcsv path
+ * in the server class.
  */
-// TODO 1: Check out this Handler. How can we make it only get activities based on participant #?
-// See Documentation here: https://www.boredapi.com/documentation
 public class LoadCSVFileHandler implements Route {
   /**
    * This handle method needs to be filled by any class implementing Route. When the path set in
-   * edu.brown.cs.examples.moshiExample.server.Server gets accessed, it will fire the handle method.
-   *
-   * <p>NOTE: beware this "return Object" and "throws Exception" idiom. We need to follow it because
-   * the library uses it, but in general this lowers the protection of the type system.
+   * Server gets accessed, it will fire the handle method. This handle method is used for loading a
+   * CSV file that is in the data folder.
    *
    * @param request The request object providing information about the HTTP request
    * @param response The response object providing functionality for modifying the response
    */
   private DataWrapper<List<String>> data;
 
+  /**
+   * This is the constructor of the LoadCSVFileHandler. This is where we set up the instance of
+   * Datawrapper.
+   *
+   * @param data
+   */
   public LoadCSVFileHandler(DataWrapper<List<String>> data) {
     this.data = data;
   }
 
+  /**
+   * This method gets the path requested by the user and attempts to load in the requested CSVFile.
+   *
+   * @param request
+   * @param response
+   * @return
+   */
   @Override
   public Object handle(Request request, Response response) {
 
+    // requests pasesd in argument
     String path = request.queryParams("path");
     String fileLocation = "data/" + path;
 
     // Creates a hashmap to store the results of the request
     Map<String, Object> responseMap = new HashMap<>();
     try {
-      // Sends a request to the API and receives JSON back
+      // Calls helper method that attempts to open the CSV file and create a parser
       CSVParse<List<String>> csvFileParser = this.sendRequest(fileLocation);
       // Adds results to the responseMap
       responseMap.put("result", "success");
+      // Set the CSVParser to the current loaded in files parser
       this.data.setCSVParser(csvFileParser);
       return responseMap;
     } catch (Exception e) {
       e.printStackTrace();
-      // This is a relatively unhelpful exception message. An important part of this sprint will be
-      // in learning to debug correctly by creating your own informative error messages where Spark
-      // falls short.
-      responseMap.put("result", "Exception");
+      // Exception message if unable to load it.
+      responseMap.put("result", "Exception: unable to load CSV");
     }
     return responseMap;
   }
 
-  private CSVParse<List<String>> sendRequest(String fileLocation)
-      throws IOException{
+  /**
+   * Helper method that is used to set up the CSV file and the parser used to parse the file.
+   *
+   * @param fileLocation
+   * @return
+   * @throws IOException
+   */
+  private CSVParse<List<String>> sendRequest(String fileLocation) throws IOException {
 
     FileReader file = new FileReader(fileLocation);
     Creator creator = new Creator();

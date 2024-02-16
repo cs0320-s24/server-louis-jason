@@ -8,14 +8,15 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * This class is used for deserializing JSON from the CensusAPI into an instance of
- * BroadbandInfo or into list of strings.
+ * This class is used for deserializing JSON from the CensusAPI into an instance of BroadbandInfo or
+ * into list of strings.
  */
 public class BroadbandAPIUtilities {
 
   /**
    * This method is used for deserializing the json of states and its codes. We deserialize it into
    * a hashmap<string, string>. This method only gets called once when the server is started up.
+   *
    * @param jsonBroadband
    * @return
    */
@@ -43,9 +44,10 @@ public class BroadbandAPIUtilities {
   }
 
   /**
-   * This method is used for deserializing the json of counties and its codes. We deserialize it into
-   * a hashmap<string, string>. This method gets called whenever a new county is entered and is not in
-   * the cache.
+   * This method is used for deserializing the json of counties and its codes. We deserialize it
+   * into a hashmap<string, string>. This method gets called whenever a new county is entered and is
+   * not in the cache.
+   *
    * @param jsonBroadband
    * @return
    */
@@ -62,12 +64,13 @@ public class BroadbandAPIUtilities {
       HashMap<String, String> countyMap = new HashMap<>();
       for (int i = 0; i < mapped.size(); i++) {
         String county = mapped.get(i).get(0);
-        //below it returns county and state, but we just want the county so parse everything before the comma
+        // below it returns county and state, but we just want the county so parse everything before
+        // the comma
         if (county.contains(",")) {
           String[] countyArr = county.split(",");
           county = countyArr[0];
         }
-        //put the actual county name into the hashmap
+        // put the actual county name into the hashmap
         countyMap.put(county, mapped.get(i).get(2));
       }
       return countyMap;
@@ -80,9 +83,10 @@ public class BroadbandAPIUtilities {
   }
 
   /**
-   * This method deserializes the broadband data json that is received from the census API.
-   * We turn it into a list of list of strings which is returned back for further manipulation
-   * in the BroadbandHandler class.
+   * This method deserializes the broadband data json that is received from the census API. We turn
+   * it into a list of list of strings which is returned back for further manipulation in the
+   * BroadbandHandler class.
+   *
    * @param jsonBroadband
    * @return
    */
@@ -100,12 +104,13 @@ public class BroadbandAPIUtilities {
     // Returns an empty ArrayList if there is an error
     catch (IOException e) {
       e.printStackTrace();
-        return new ArrayList<>();
+      return new ArrayList<>();
     }
   }
 
   /**
    * This method takes in a county and state and makes a new instance of BroadbandInfo class
+   *
    * @param county
    * @param state
    * @return
@@ -113,5 +118,4 @@ public class BroadbandAPIUtilities {
   public static BroadbandInfo makeBroadbandInfo(String county, String state) {
     return new BroadbandInfo(county, state);
   }
-
 }

@@ -8,6 +8,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
 
+/**
+ * This class is the BroadbandSearch class. It is used whenever we need to search and retrieve information from the
+ * census API.
+ */
 public class BroadbandSearch implements BroadbandInterface<String, BroadbandInfo>{
 
     HashMap<String, String> stateCodesMap;

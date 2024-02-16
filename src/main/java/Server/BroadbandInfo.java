@@ -1,5 +1,9 @@
 package Server;
 
+/**
+ * This class is used for searching in the Census API. It has helpful get
+ * methods and has all the fields if needed to be used when deserializing a JSON.
+ */
 public class BroadbandInfo {
 
 

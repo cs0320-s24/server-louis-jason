@@ -20,8 +20,13 @@ public class BroadbandSearch implements BroadbandInterface<String, BroadbandInfo
         // WE WILL HAVE TO DESERIALIZE AND SERIALIZE THE BROADBANDDATA BELOW
         String countyName = broadbandInfo.getCountyName();
         String stateName = broadbandInfo.getStateName();
+        String broadbandData;
 
         String stateCode = this.stateCodesMap.get(stateName);
+        if(stateCode == null){
+            broadbandData = "error_bad_request";
+            return broadbandData;
+        }
         String countyCode;
         if (countyName.equals("*")){
             countyCode = "*";
@@ -29,9 +34,11 @@ public class BroadbandSearch implements BroadbandInterface<String, BroadbandInfo
         else {
             countyCode = BroadbandAPIUtilities.deserializeBroadbandCounty(
                     this.getCountyCodes(stateCode)).get(countyName);
+            if(countyCode == null){
+                broadbandData = "error_bad_request";
+                return broadbandData;
+            }
         }
-
-        String broadbandData;
         try {
             broadbandData = this.sendRequest(countyCode, stateCode);
         } catch (Exception e) {

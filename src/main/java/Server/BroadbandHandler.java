@@ -59,10 +59,12 @@ public class BroadbandHandler implements Route {
       BroadbandInfo broadbandToSearch = BroadbandAPIUtilities.makeBroadbandInfo(countyName, stateName);
       //code below should also probably be cached since also accessing API
       String broadbandResult = this.cachedBroadbandSearcher.search(broadbandToSearch);
-      System.out.println(broadbandResult);
       List<List<String>> deserializedBroadbandData = BroadbandAPIUtilities.deserializeBroadbandData(broadbandResult);
       // Adds results to the responseMap
-      if (deserializedBroadbandData.isEmpty()){
+      if (broadbandResult.equals("error_bad_request")){
+        responseMap.put("result", "Exception: error_bad_request");
+      }
+      else if (deserializedBroadbandData.isEmpty()){
         responseMap.put("result", "Exception: error_datasource");
       }
       else {
@@ -92,7 +94,7 @@ public class BroadbandHandler implements Route {
       // This is a relatively unhelpful exception message. An important part of this sprint will be
       // in learning to debug correctly by creating your own informative error messages where Spark
       // falls short.
-      responseMap.put("result", "Exception");
+      responseMap.put("result", "Exception: error_bad_json");
     }
     return responseMap;
   }

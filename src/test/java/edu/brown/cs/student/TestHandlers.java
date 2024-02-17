@@ -167,4 +167,46 @@ public class TestHandlers {
         assertEquals("City/Town", data.get(0).get(0));
         loadCsv.disconnect();
     }
+
+    @Test
+    public void testCsvLoadSearch() throws IOException {
+        /////////// LOAD DATASOURCE ///////////
+        // Set up the request, make the request
+        HttpURLConnection loadCsv = tryRequest("loadcsv?path=RI_Town_and_Income.csv");
+        assertEquals(200, loadCsv.getResponseCode());
+        HttpURLConnection viewCsv = tryRequest("searchcsv?value=Cranston");
+        assertEquals(200, viewCsv.getResponseCode());
+        // Get the expected response: a success
+        Map<String, Object> responseBody = adapter.fromJson(new Buffer().readFrom(viewCsv.getInputStream()));
+        showDetailsIfError(responseBody);
+        Map<String, Object> responseMap = (Map<String, Object>) responseBody.get("responseMap");
+        List<List<String>> data = (List<List<String>>) responseMap.get("data");
+        assertEquals("Cranston", data.get(0).get(0));
+        loadCsv.disconnect();
+    }
+
+    @Test
+    public void testCsvLoadSearch2() throws IOException {
+        /////////// LOAD DATASOURCE ///////////
+        // Set up the request, make the request
+        HttpURLConnection loadCsv = tryRequest("loadcsv?path=RI_Town_and_Income.csv");
+        assertEquals(200, loadCsv.getResponseCode());
+        HttpURLConnection viewCsv =
+                tryRequest("searchcsv?value=Cranston&booleanHeader=true&identifier=City/Town");
+        HttpURLConnection viewCsv2 =
+                tryRequest("searchcsv?value=Cranston&booleanHeader=true&identifier=Median%20Family%20Income");
+        assertEquals(200, viewCsv.getResponseCode());
+        // Get the expected response: a success
+        Map<String, Object> responseBody = adapter.fromJson(new Buffer().readFrom(viewCsv.getInputStream()));
+        showDetailsIfError(responseBody);
+        Map<String, Object> responseMap = (Map<String, Object>) responseBody.get("responseMap");
+        List<List<String>> data = (List<List<String>>) responseMap.get("data");
+        assertEquals("Cranston", data.get(0).get(0));
+
+//        Map<String, Object> noResult = adapter.fromJson(new Buffer().readFrom(viewCsv2.getInputStream()));
+//        showDetailsIfError(noResult);
+//        assertEquals("error_datasource", noResult.get("result"));
+
+        loadCsv.disconnect();
+    }
 }

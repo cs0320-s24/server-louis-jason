@@ -81,7 +81,7 @@ public class BroadbandSearch implements SearchInterface<String, BroadbandInfo> {
       broadbandData = this.sendRequest(countyCode, stateCode);
     } catch (Exception e) {
       e.printStackTrace();
-      broadbandData = "Error retrieving data";
+      broadbandData = "error_datasource";
     }
     // Adds results to the responseMap by returning
     return broadbandData;

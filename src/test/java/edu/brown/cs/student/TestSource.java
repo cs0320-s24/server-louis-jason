@@ -49,7 +49,8 @@ public class TestSource {
         String result3 = cachedBroadbandSearch.search(searchInfo); // Uncached version again
 
         CacheStats cacheStats = cachedBroadbandSearch.getStats();
-        assertEquals(result, "asdf");
+        assertEquals(result, "[[\"NAME\",\"S2802_C03_022E\",\"state\",\"county\"],\n" +
+                "[\"Kings County, California\",\"83.5\",\"06\",\"031\"]]");
         assertEquals(result, result2);
         assertEquals(result2, result3);
         assertEquals(result, result2);

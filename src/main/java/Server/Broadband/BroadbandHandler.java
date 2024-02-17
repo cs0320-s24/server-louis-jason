@@ -2,7 +2,13 @@ package Server.Broadband;
 
 import JsonTypes.BroadbandInfo;
 import Server.Cache.SearchInterface;
+
+import java.lang.reflect.Type;
 import java.util.*;
+
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -43,6 +49,9 @@ public class BroadbandHandler implements Route {
    */
   @Override
   public Object handle(Request request, Response response) {
+    Moshi moshi = new Moshi.Builder().build();
+    Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
+    JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
     // request arguments passed in
     String countyName = request.queryParams("county");
     String stateName = request.queryParams("state");
@@ -93,23 +102,23 @@ public class BroadbandHandler implements Route {
             broadBandDataReturn.add(oneCountyData);
           }
           // put data into the responseMap
-          responseMap.put("broadband data", broadBandDataReturn);
+          responseMap.put("broadband_data", broadBandDataReturn);
         } else {
           // this occurs if * was not passed in as county name
-          responseMap.put("broadband data", deserializedBroadbandData.get(1).get(1));
+          responseMap.put("broadband_data", deserializedBroadbandData.get(1).get(1));
         }
       }
       // put in response map arguments and time retrieved so that the user can debug on their end if
       // needed
-      responseMap.put("state entered", stateName);
-      responseMap.put("county entered", countyName);
-      responseMap.put("date data was retrieved on", java.time.LocalDateTime.now());
-      return responseMap;
+      responseMap.put("state_entered", stateName);
+      responseMap.put("county_entered", countyName);
+      responseMap.put("date_of_retrieval", java.time.LocalDateTime.now().toString());
+      return adapter.toJson(responseMap);
     } catch (Exception e) {
       e.printStackTrace();
       // if gets to this point then returns exception of error_bad_json
       responseMap.put("result", "Exception: error_bad_json");
     }
-    return responseMap;
+    return adapter.toJson(responseMap);
   }
 }

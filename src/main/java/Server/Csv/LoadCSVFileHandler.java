@@ -96,8 +96,6 @@ public class LoadCSVFileHandler implements Route {
     Creator creator = new Creator();
     CSVParse<List<String>> parser = new CSVParse<>(file, creator);
 
-    System.out.println("Loaded file at " + fileLocation);
-
     return parser;
   }
 }

@@ -25,6 +25,8 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.CharBuffer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -138,6 +140,39 @@ public class TestHandlers {
     }
 
     @Test
+    public void testCsvTwoLoads() throws IOException, InterruptedException {
+        /////////// LOAD DATASOURCE ///////////
+        // Set up the request, make the request
+        HttpURLConnection loadCsv = tryRequest("loadcsv?path=census/income_by_race.csv");
+        // Get an OK response (the *connection* worked, the *API* provides an error response)
+        assertEquals(200, loadCsv.getResponseCode());
+        HttpURLConnection viewCsv = tryRequest("viewcsv");
+        assertEquals(200, viewCsv.getResponseCode());
+        // Get the expected response: a success
+        Map<String, Object> responseBody = adapter.fromJson(new Buffer().readFrom(viewCsv.getInputStream()));
+        showDetailsIfError(responseBody);
+        assertEquals("success", responseBody.get("result"));
+        List<List<String>> data = (List<List<String>>) responseBody.get("data");
+        assertEquals("ID Race", data.get(0).get(0));
+
+        HttpURLConnection loadCsv2 = tryRequest("loadcsv?path=RI_Town_and_Income.csv");
+        // Get an OK response (the *connection* worked, the *API* provides an error response)
+        assertEquals(200, loadCsv2.getResponseCode());
+        HttpURLConnection viewCsv2 = tryRequest("viewcsv");
+        assertEquals(200, viewCsv2.getResponseCode());
+        // Get the expected response: a success
+        Map<String, Object> responseBody2 = adapter.fromJson(new Buffer().readFrom(viewCsv2.getInputStream()));
+        showDetailsIfError(responseBody2);
+        assertEquals("success", responseBody2.get("result"));
+        List<List<String>> data2 = (List<List<String>>) responseBody2.get("data");
+        assertEquals("City/Town", data2.get(0).get(0));
+        loadCsv.disconnect();
+        loadCsv2.disconnect();
+        viewCsv.disconnect();
+        viewCsv2.disconnect();
+    }
+
+    @Test
     public void testBadPathLoad() throws IOException {
         /////////// LOAD DATASOURCE ///////////
         // Set up the request, make the request
@@ -147,7 +182,7 @@ public class TestHandlers {
         // Get the expected response: a success
         Map<String, Object> responseBody = adapter.fromJson(new Buffer().readFrom(loadCsv.getInputStream()));
         showDetailsIfError(responseBody);
-        assertEquals("error_datasource", responseBody.get("result"));
+        assertEquals("error_bad_json", responseBody.get("result"));
         loadCsv.disconnect();
     }
 
@@ -162,10 +197,10 @@ public class TestHandlers {
         // Get the expected response: a success
         Map<String, Object> responseBody = adapter.fromJson(new Buffer().readFrom(viewCsv.getInputStream()));
         showDetailsIfError(responseBody);
-        Map<String, Object> responseMap = (Map<String, Object>) responseBody.get("responseMap");
-        List<List<String>> data = (List<List<String>>) responseMap.get("data");
+        List<List<String>> data = (List<List<String>>) responseBody.get("data");
         assertEquals("City/Town", data.get(0).get(0));
         loadCsv.disconnect();
+        viewCsv.disconnect();
     }
 
     @Test
@@ -174,15 +209,15 @@ public class TestHandlers {
         // Set up the request, make the request
         HttpURLConnection loadCsv = tryRequest("loadcsv?path=RI_Town_and_Income.csv");
         assertEquals(200, loadCsv.getResponseCode());
-        HttpURLConnection viewCsv = tryRequest("searchcsv?value=Cranston");
-        assertEquals(200, viewCsv.getResponseCode());
+        HttpURLConnection searchCsv = tryRequest("searchcsv?value=Cranston");
+        assertEquals(200, searchCsv.getResponseCode());
         // Get the expected response: a success
-        Map<String, Object> responseBody = adapter.fromJson(new Buffer().readFrom(viewCsv.getInputStream()));
+        Map<String, Object> responseBody = adapter.fromJson(new Buffer().readFrom(searchCsv.getInputStream()));
         showDetailsIfError(responseBody);
-        Map<String, Object> responseMap = (Map<String, Object>) responseBody.get("responseMap");
-        List<List<String>> data = (List<List<String>>) responseMap.get("data");
+        List<List<String>> data = (List<List<String>>) responseBody.get("data");
         assertEquals("Cranston", data.get(0).get(0));
         loadCsv.disconnect();
+        searchCsv.disconnect();
     }
 
     @Test
@@ -191,22 +226,109 @@ public class TestHandlers {
         // Set up the request, make the request
         HttpURLConnection loadCsv = tryRequest("loadcsv?path=RI_Town_and_Income.csv");
         assertEquals(200, loadCsv.getResponseCode());
-        HttpURLConnection viewCsv =
+        HttpURLConnection searchCsv =
                 tryRequest("searchcsv?value=Cranston&booleanHeader=true&identifier=City/Town");
-        HttpURLConnection viewCsv2 =
+        HttpURLConnection searchCsv2 =
                 tryRequest("searchcsv?value=Cranston&booleanHeader=true&identifier=Median%20Family%20Income");
-        assertEquals(200, viewCsv.getResponseCode());
+        assertEquals(200, searchCsv.getResponseCode());
         // Get the expected response: a success
-        Map<String, Object> responseBody = adapter.fromJson(new Buffer().readFrom(viewCsv.getInputStream()));
+        Map<String, Object> responseBody = adapter.fromJson(new Buffer().readFrom(searchCsv.getInputStream()));
         showDetailsIfError(responseBody);
-        Map<String, Object> responseMap = (Map<String, Object>) responseBody.get("responseMap");
-        List<List<String>> data = (List<List<String>>) responseMap.get("data");
+        List<List<String>> data = (List<List<String>>) responseBody.get("data");
         assertEquals("Cranston", data.get(0).get(0));
 
-//        Map<String, Object> noResult = adapter.fromJson(new Buffer().readFrom(viewCsv2.getInputStream()));
-//        showDetailsIfError(noResult);
-//        assertEquals("error_datasource", noResult.get("result"));
+        Map<String, Object> noResult = adapter.fromJson(new Buffer().readFrom(searchCsv2.getInputStream()));
+        showDetailsIfError(noResult);
+        List<List<String>> data2 = (List<List<String>>) noResult.get("data");
+        List<List<String>> params2 = (List<List<String>>) noResult.get("params");
+        List<String> params2check = new ArrayList<>();
+        params2check.add("Cranston");
+        params2check.add("true");
+        params2check.add(null);
+        params2check.add("Median Family Income");
+        assertEquals(new ArrayList<>(), data2);
+        assertEquals(params2check, params2);
 
         loadCsv.disconnect();
+        searchCsv.disconnect();
+        searchCsv2.disconnect();
+    }
+
+    @Test
+    public void testBroadband() throws IOException {
+        /////////// LOAD DATASOURCE ///////////
+        // Set up the request, make the request
+        HttpURLConnection broadband = tryRequest("broadband?state=California&county=Marin%20County");
+        assertEquals(200, broadband.getResponseCode());
+        Map<String, Object> result = adapter.fromJson(new Buffer().readFrom(broadband.getInputStream()));
+        showDetailsIfError(result);
+        String data = (String) result.get("result");
+        assertEquals("success", data);
+        String data2 = (String) result.get("broadband_data");
+        assertEquals("94.0", data2);
+        String data3 = (String) result.get("county_entered");
+        assertEquals("Marin County", data3);
+        String data4 = (String) result.get("state_entered");
+        assertEquals("California", data4);
+
+
+        HttpURLConnection broadband2 = tryRequest("broadband?state=California&county=Los%20Angeles%20County");
+        assertEquals(200, broadband2.getResponseCode());
+        Map<String, Object> result2 = adapter.fromJson(new Buffer().readFrom(broadband2.getInputStream()));
+        showDetailsIfError(result2);
+        String data5 = (String) result2.get("result");
+        assertEquals("error_datasource", data5);
+
+        HttpURLConnection broadband3 = tryRequest("broadband?state=somewhere&county=nowhere");
+        assertEquals(200, broadband3.getResponseCode());
+        Map<String, Object> result3 = adapter.fromJson(new Buffer().readFrom(broadband3.getInputStream()));
+        showDetailsIfError(result3);
+        String data6 = (String) result3.get("result");
+        assertEquals("error_bad_request", data6);
+
+        broadband.disconnect();
+        broadband2.disconnect();
+        broadband3.disconnect();
+    }
+
+    @Test
+    public void testAll() throws IOException {
+        /////////// LOAD DATASOURCE ///////////
+        // Set up the request, make the request
+        HttpURLConnection loadCsv = tryRequest("loadcsv?path=RI_Town_and_Income.csv");
+        assertEquals(200, loadCsv.getResponseCode());
+        HttpURLConnection viewCsv = tryRequest("viewcsv");
+        assertEquals(200, viewCsv.getResponseCode());
+        HttpURLConnection searchCsv = tryRequest("searchcsv?value=Cranston");
+        assertEquals(200, searchCsv.getResponseCode());
+
+        Map<String, Object> responseBody = adapter.fromJson(new Buffer().readFrom(viewCsv.getInputStream()));
+        showDetailsIfError(responseBody);
+        List<List<String>> dataV = (List<List<String>>) responseBody.get("data");
+        assertEquals("City/Town", dataV.get(0).get(0));
+
+        Map<String, Object> responseBody2 = adapter.fromJson(new Buffer().readFrom(searchCsv.getInputStream()));
+        showDetailsIfError(responseBody2);
+        List<List<String>> dataS = (List<List<String>>) responseBody2.get("data");
+        assertEquals("Cranston", dataS.get(0).get(0));
+
+
+        HttpURLConnection broadband = tryRequest("broadband?state=California&county=Marin%20County");
+        assertEquals(200, broadband.getResponseCode());
+        Map<String, Object> result = adapter.fromJson(new Buffer().readFrom(broadband.getInputStream()));
+        showDetailsIfError(result);
+        String data = (String) result.get("result");
+        assertEquals("success", data);
+        String data2 = (String) result.get("broadband_data");
+        assertEquals("94.0", data2);
+        String data3 = (String) result.get("county_entered");
+        assertEquals("Marin County", data3);
+        String data4 = (String) result.get("state_entered");
+        assertEquals("California", data4);
+
+        broadband.disconnect();
+        viewCsv.disconnect();
+        loadCsv.disconnect();
+        searchCsv.disconnect();
     }
 }

@@ -69,7 +69,6 @@ public class Search {
         // this is where we check if the value is within a row
         else if (this.value.equals(strings.get(identifier))) {
           this.searchList.add(strings);
-          System.out.println(strings);
         }
         row++;
       }
@@ -142,7 +141,6 @@ public class Search {
         for (int i = 0; i < this.numberOfColumns; i++) {
           if (this.value.equals(strings.get(i))) {
             this.searchList.add(strings);
-            System.out.println(strings);
           }
         }
       }

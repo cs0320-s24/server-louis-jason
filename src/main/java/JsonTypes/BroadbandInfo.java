@@ -6,27 +6,13 @@ package JsonTypes;
  */
 public class BroadbandInfo {
 
-  private String name;
-  private float usage;
   private String county;
   private String state;
-  private String countyCode;
-  private String stateCode;
-
-  public BroadbandInfo() {}
 
   // Used for constructing a BroadbandInfo to search in cache
   public BroadbandInfo(String county, String state) {
     this.county = county;
     this.state = state;
-  }
-
-  public String getCountyCode() {
-    return this.countyCode;
-  }
-
-  public String getStateCode() {
-    return this.stateCode;
   }
 
   public String getCountyName() {
@@ -53,9 +39,6 @@ public class BroadbandInfo {
     }
 
     BroadbandInfo oBroadbandInfo = (BroadbandInfo) o;
-
-    System.out.println(o.toString());
-    System.out.println(this.toString());
 
     return this.toString().equals(oBroadbandInfo.toString());
   }

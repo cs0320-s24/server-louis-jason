@@ -53,7 +53,7 @@ public class ViewCSVFileHandler implements Route {
     return new ParseFailureResponse().serialize();
   }
   /** Response object to send, containing the CSVFile to view */
-  public record ParseSuccessResponse(String response_type, Map<String, Object> responseMap) {
+  public record ParseSuccessResponse(String result, Map<String, Object> data) {
     public ParseSuccessResponse(Map<String, Object> responseMap) {
       this("success", responseMap);
     }
@@ -77,7 +77,7 @@ public class ViewCSVFileHandler implements Route {
   }
 
   /** Response object to send if there was an error */
-  public record ParseFailureResponse(String response_type) {
+  public record ParseFailureResponse(String result) {
     public ParseFailureResponse() {
       this("error: unable to view CSVFile");
     }

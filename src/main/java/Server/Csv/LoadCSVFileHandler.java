@@ -60,6 +60,12 @@ public class LoadCSVFileHandler implements Route {
     JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
     // Creates a hashmap to store the results of the request
     Map<String, Object> responseMap = new HashMap<>();
+
+    if (path == null) {
+      responseMap.put("result", "error_bad_json");
+      responseMap.put("message", "Instructions: loadcsv?path=<pathname>");
+      return adapter.toJson(responseMap);
+    }
     try {
       // Calls helper method that attempts to open the CSV file and create a parser
       CSVParse<List<String>> csvFileParser = this.sendRequest(fileLocation);
@@ -72,6 +78,7 @@ public class LoadCSVFileHandler implements Route {
       e.printStackTrace();
       // Exception message if unable to load it.
       responseMap.put("result", "error_datasource");
+      responseMap.put("message", "Cannot find specified file. Make sure path is within data/ directory.");
     }
     return adapter.toJson(responseMap);
   }

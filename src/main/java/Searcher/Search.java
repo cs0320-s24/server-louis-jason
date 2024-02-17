@@ -16,7 +16,7 @@ public class Search {
   private boolean typeOfIdentifier;
   private List<List<String>> objectList;
   private int numberOfColumns;
-  private List<List<String>> testList;
+  private List<List<String>> searchList;
 
   public Search(
       String value,
@@ -37,25 +37,23 @@ public class Search {
    * terminal. If there is malformed data, then the search function will skip that row and try to
    * continue searching for the value.
    */
-  public void searches() throws Exception {
-    this.testList = new ArrayList<>();
+  public List<List<String>> searches() throws Exception {
+    this.searchList = new ArrayList<>();
     // this finds the number of columns that is in the very first row of the CSV file
     int numberOfColumns = this.objectList.get(0).size();
     this.numberOfColumns = numberOfColumns;
     int identifier;
     if (this.typeOfIdentifier) {
-      // if the identifier is an integer, then we will parse what they typed into a integer.
+      // if the identifier is an integer, then we will parse what they typed into an integer.
       try {
         identifier = parseInt(this.identifier);
       } catch (NumberFormatException e) {
-        // if cant turn the string into a number terminates the program
-        System.err.println("error:" + e);
-        return;
+        // if cant turn the string into a number, throw exception
+        throw new Exception("Column identifier needs to be an integer");
       }
       // error checking that the identifier is a reasonable number to use
       if (identifier + 1 > numberOfColumns) {
-        System.err.println("Column identifier out of range");
-        return;
+        throw new Exception("Column identifier out of range (max columns: " + numberOfColumns + ")");
       }
       int row = 0;
       // go through object list to find if the value is within it
@@ -70,7 +68,7 @@ public class Search {
         }
         // this is where we check if the value is within a row
         else if (this.value.equals(strings.get(identifier))) {
-          this.testList.add(strings);
+          this.searchList.add(strings);
           System.out.println(strings);
         }
         row++;
@@ -96,23 +94,23 @@ public class Search {
               }
               // sees if the column value is equal to the value specified by the user
               else if (this.value.equals(strings.get(identifier))) {
-                this.testList.add(strings);
-                System.out.println(strings);
+                this.searchList.add(strings);
               }
               row2++;
             }
             // if we get to this point then we have searched the CSV and want to leave the function
-            return;
+            return this.searchList;
           }
         }
         // if we are here then the header is not in the file so call helper function.
-        helperNoHeaders();
+        throw new Exception("Header not found. Available headers: " + this.objectList.get(0));
       } else {
         // if there are no headers or entered a N/A then we are here
         // we must search through all of the csv file to look for the value we want
         helperNoHeaders();
       }
     }
+    return this.searchList;
   }
 
   /**
@@ -120,8 +118,8 @@ public class Search {
    *
    * @return
    */
-  public List<List<String>> getTestList() {
-    return this.testList;
+  public List<List<String>> getSearchList() {
+    return this.searchList;
   }
 
   /**
@@ -143,7 +141,7 @@ public class Search {
         // if not a malformed row then check each column of the row for the value
         for (int i = 0; i < this.numberOfColumns; i++) {
           if (this.value.equals(strings.get(i))) {
-            this.testList.add(strings);
+            this.searchList.add(strings);
             System.out.println(strings);
           }
         }

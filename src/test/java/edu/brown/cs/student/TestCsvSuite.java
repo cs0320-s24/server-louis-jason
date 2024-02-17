@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestCsvSuite {
   @Test
@@ -54,7 +55,7 @@ public class TestCsvSuite {
   }
 
   @Test
-  public void testBasicSearch() {
+  public void testBasicSearch() throws Exception {
     Creator creator = new Creator();
     FileReader fileReader;
     String fileName = "data/census/dol_ri_earnings_disparity_small.csv";
@@ -112,20 +113,15 @@ public class TestCsvSuite {
     List<List<String>> testList = new ArrayList<>();
     testList.add(internal1);
     testList.add(internal2);
-    searcher.searches();
-    Assert.assertEquals(searcher.getTestList(), testList);
-    searcher1.searches();
-    Assert.assertEquals(searcher1.getTestList(), testList);
-    searcher2.searches();
-    Assert.assertEquals(searcher2.getTestList(), testList);
-    searcher3.searches();
-    Assert.assertEquals(searcher3.getTestList(), testList);
-    searcher4.searches();
-    Assert.assertEquals(searcher4.getTestList(), testList);
+    Assert.assertEquals(searcher.searches(), testList);
+    Assert.assertEquals(searcher1.searches(), testList);
+    Assert.assertEquals(searcher2.searches(), testList);
+    Assert.assertEquals(searcher3.searches(), testList);
+    Assert.assertEquals(searcher4.searches(), testList);
   }
 
   @Test
-  public void testMalformedSearch() {
+  public void testMalformedSearch() throws Exception {
     Creator creator = new Creator();
     FileReader fileReader;
     String fileName = "data/malformed/malformed_signs.csv";
@@ -177,20 +173,25 @@ public class TestCsvSuite {
     internal1.add("Sophie");
     List<List<String>> testList = new ArrayList<>();
     testList.add(internal1);
-    searcher.searches();
-    Assert.assertEquals(searcher.getTestList(), testList);
-    searcher1.searches();
-    Assert.assertEquals(searcher1.getTestList(), testList);
-    searcher2.searches();
-    Assert.assertEquals(searcher2.getTestList(), testList);
-    searcher3.searches();
-    Assert.assertEquals(searcher3.getTestList(), testList);
-    searcher4.searches();
-    Assert.assertEquals(searcher4.getTestList(), testList);
+    Exception exception = assertThrows(Exception.class, () -> {
+      searcher.searches();
+    });
+    Exception exception1 = assertThrows(Exception.class, () -> {
+      searcher1.searches();
+    });
+    Exception exception2 = assertThrows(Exception.class, () -> {
+      searcher2.searches();
+    });
+    Exception exception3 = assertThrows(Exception.class, () -> {
+      searcher3.searches();
+    });
+    Exception exception4 = assertThrows(Exception.class, () -> {
+      searcher4.searches();
+    });
   }
 
   @Test
-  public void testDifferentReaderSearch() {
+  public void testDifferentReaderSearch() throws Exception {
     Creator creator = new Creator();
     StringReader fileReader;
     String fileName =
@@ -250,20 +251,25 @@ public class TestCsvSuite {
     internal1.add("Sophie");
     List<List<String>> testList = new ArrayList<>();
     testList.add(internal1);
-    searcher.searches();
-    Assert.assertEquals(searcher.getTestList(), testList);
-    searcher1.searches();
-    Assert.assertEquals(searcher1.getTestList(), testList);
-    searcher2.searches();
-    Assert.assertEquals(searcher2.getTestList(), testList);
-    searcher3.searches();
-    Assert.assertEquals(searcher3.getTestList(), testList);
-    searcher4.searches();
-    Assert.assertEquals(searcher4.getTestList(), testList);
+    Exception exception = assertThrows(Exception.class, () -> {
+      searcher.searches();
+    });
+    Exception exception1 = assertThrows(Exception.class, () -> {
+      searcher1.searches();
+    });
+    Exception exception2 = assertThrows(Exception.class, () -> {
+      searcher2.searches();
+    });
+    Exception exception3 = assertThrows(Exception.class, () -> {
+      searcher3.searches();
+    });
+    Exception exception4 = assertThrows(Exception.class, () -> {
+      searcher4.searches();
+    });
   }
 
   @Test
-  public void testBasicSearchValueNotPresent() {
+  public void testBasicSearchValueNotPresent() throws Exception {
     Creator creator = new Creator();
     FileReader fileReader;
     String fileName = "data/census/dol_ri_earnings_disparity_small.csv";
@@ -312,20 +318,15 @@ public class TestCsvSuite {
 
     List<List<String>> testList = new ArrayList<>();
 
-    searcher.searches();
-    Assert.assertEquals(searcher.getTestList(), testList);
-    searcher1.searches();
-    Assert.assertEquals(searcher1.getTestList(), testList);
-    searcher2.searches();
-    Assert.assertEquals(searcher2.getTestList(), testList);
-    searcher3.searches();
-    Assert.assertEquals(searcher3.getTestList(), testList);
-    searcher4.searches();
-    Assert.assertEquals(searcher4.getTestList(), testList);
+    Assert.assertEquals(searcher.searches(), testList);
+    Assert.assertEquals(searcher1.searches(), testList);
+    Assert.assertEquals(searcher2.searches(), testList);
+    Assert.assertEquals(searcher3.searches(), testList);
+    Assert.assertEquals(searcher4.searches(), testList);
   }
 
   @Test
-  public void testBasicSearchValueInWrongColumn() {
+  public void testBasicSearchValueInWrongColumn() throws Exception {
     Creator creator = new Creator();
     FileReader fileReader;
     String fileName = "data/census/dol_ri_earnings_disparity_small.csv";
@@ -387,17 +388,12 @@ public class TestCsvSuite {
     List<List<String>> testList1 = new ArrayList<>();
 
     // will return nothing
-    searcher.searches();
-    Assert.assertEquals(searcher.getTestList(), testList1);
-    searcher1.searches();
-    Assert.assertEquals(searcher1.getTestList(), testList1);
+    Assert.assertEquals(searcher.searches(), testList1);
+    Assert.assertEquals(searcher1.searches(), testList1);
     // will return like usual
-    searcher2.searches();
-    Assert.assertEquals(searcher2.getTestList(), testList);
-    searcher3.searches();
-    Assert.assertEquals(searcher3.getTestList(), testList);
-    searcher4.searches();
-    Assert.assertEquals(searcher4.getTestList(), testList);
+    Assert.assertEquals(searcher2.searches(), testList);
+    Assert.assertEquals(searcher3.searches(), testList);
+    Assert.assertEquals(searcher4.searches(), testList);
   }
 
   @Test

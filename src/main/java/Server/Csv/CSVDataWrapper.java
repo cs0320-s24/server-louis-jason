@@ -32,6 +32,11 @@ public class CSVDataWrapper<T> {
    */
   public void setCSVParser(CSVParse<T> parser) {
     this.parser = parser;
+    this.parsedData = null;
+  }
+
+  public boolean nullParser() {
+    return (this.parser == null);
   }
 
   /**

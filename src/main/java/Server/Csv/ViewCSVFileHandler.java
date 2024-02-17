@@ -43,9 +43,8 @@ public class ViewCSVFileHandler implements Route {
       // get parsed data from the loaded in CSVFile
       List<List<String>> objectList = this.data.parseCSV();
       // Adds results to the responseMap
-      responseMap.put("data", objectList);
       // serialize the responseMap
-      return new ParseSuccessResponse(responseMap).serialize();
+      return new ParseSuccessResponse(objectList).serialize();
     } catch (Exception e) {
       e.printStackTrace();
       // Error printed and its stack trace
@@ -53,8 +52,8 @@ public class ViewCSVFileHandler implements Route {
     return new ParseFailureResponse().serialize();
   }
   /** Response object to send, containing the CSVFile to view */
-  public record ParseSuccessResponse(String result, Map<String, Object> data) {
-    public ParseSuccessResponse(Map<String, Object> responseMap) {
+  public record ParseSuccessResponse(String result, List<List<String>> data) {
+    public ParseSuccessResponse(List<List<String>> responseMap) {
       this("success", responseMap);
     }
     /**
@@ -77,9 +76,9 @@ public class ViewCSVFileHandler implements Route {
   }
 
   /** Response object to send if there was an error */
-  public record ParseFailureResponse(String result) {
+  public record ParseFailureResponse(String result, String message) {
     public ParseFailureResponse() {
-      this("error: unable to view CSVFile");
+      this("error_datasource", "Please load a file first");
     }
 
     /**

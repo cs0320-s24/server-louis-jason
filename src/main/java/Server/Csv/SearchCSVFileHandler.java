@@ -55,14 +55,16 @@ public class SearchCSVFileHandler implements Route {
       // create a new searcher with passed in arguments and perform a search
       Search search =
           new Search(value, booleanHeaderP, identifier, booleanIdentifierAnIntP, objectList);
-      search.searches();
       // retrieve the data that was returned from the search
-      List<List<String>> dataList = search.getTestList();
+      List<List<String>> dataList = search.searches();
       responseMap.put("data", dataList);
       return new SearchSuccessResponse(responseMap).serialize();
     } catch (Exception e) {
       e.printStackTrace();
       // Exception stack trace printed out
+      if (this.data.nullParser()) {
+        return new SearchFailureResponse("error_datasource", "Please load a file first").serialize();
+      }
       if (e instanceof NullPointerException) {
         String failure = "Error handling parameters. " +
                 "Usage: searchcsv?value=<term> " +

@@ -73,11 +73,11 @@ public class BroadbandHandler implements Route {
           BroadbandAPIUtilities.deserializeBroadbandData(broadbandResult);
       // if a state or county that does not exist was entered then below exception is thrown
       if (broadbandResult.equals("error_bad_request")) {
-        responseMap.put("result", "Exception: error_bad_request");
+        responseMap.put("result", "error_bad_request");
       }
       // if the data did not exist in the census API then below error is thrown
       else if (deserializedBroadbandData.isEmpty()) {
-        responseMap.put("result", "Exception: error_datasource");
+        responseMap.put("result", "error_datasource");
       }
       // if it worked then below code happens
       else {

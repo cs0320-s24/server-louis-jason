@@ -52,7 +52,7 @@ public class BroadbandAPIUtilities {
    * @param jsonBroadband
    * @return
    */
-  public static HashMap<String, String> deserializeBroadbandCounty(String jsonBroadband) {
+  public static HashMap<String, String> deserializeBroadbandIntoCountyMap(String jsonBroadband) {
     try {
       // Initializes Moshi
       Moshi moshi = new Moshi.Builder().build();

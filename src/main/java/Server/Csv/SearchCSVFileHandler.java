@@ -3,6 +3,8 @@ package Server.Csv;
 import Searcher.Search;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,11 +43,16 @@ public class SearchCSVFileHandler implements Route {
     // get values that were passed for the search
     String value = request.queryParams("value");
     String booleanHeader = request.queryParams("booleanHeader");
-    String identifier = request.queryParams("identifier");
     String booleanIdentifierAnInt = request.queryParams("booleanIdentifierAnInt");
+    String identifier = request.queryParams("identifier");
 
-    // Creates a hashmap to store the results of the request
-    Map<String, Object> responseMap = new HashMap<>();
+    // Create params list to echo back
+    List<String> params = new ArrayList<String>();
+    params.add(value);
+    params.add(booleanHeader);
+    params.add(booleanIdentifierAnInt);
+    params.add(identifier);
+
     try {
       // get the parsed list from the datawrapper
       List<List<String>> objectList = this.data.parseCSV();
@@ -57,8 +64,7 @@ public class SearchCSVFileHandler implements Route {
           new Search(value, booleanHeaderP, identifier, booleanIdentifierAnIntP, objectList);
       // retrieve the data that was returned from the search
       List<List<String>> dataList = search.searches();
-      responseMap.put("data", dataList);
-      return new SearchSuccessResponse(responseMap).serialize();
+      return new SearchSuccessResponse(dataList, params).serialize();
     } catch (Exception e) {
       e.printStackTrace();
       // Exception stack trace printed out
@@ -79,9 +85,9 @@ public class SearchCSVFileHandler implements Route {
   }
 
   /** Response object to send with the information that was requested in the search */
-  public record SearchSuccessResponse(String response_type, Map<String, Object> responseMap) {
-    public SearchSuccessResponse(Map<String, Object> responseMap) {
-      this("success", responseMap);
+  public record SearchSuccessResponse(String response_type, List<List<String>> data, List<String> params) {
+    public SearchSuccessResponse(List<List<String>> data, List<String> params) {
+      this("success", data, params);
     }
     /**
      * @return this response, serialized as Json

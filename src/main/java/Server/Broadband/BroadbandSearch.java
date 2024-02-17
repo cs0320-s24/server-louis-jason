@@ -182,8 +182,7 @@ public class BroadbandSearch implements SearchInterface<String, BroadbandInfo> {
             .send(retrieveCountyNums, HttpResponse.BodyHandlers.ofString());
 
     HashMap<String, String> countyCodesMap =
-        BroadbandAPIUtilities.deserializeBroadbandIntoStateMap(countyNums.body());
-
+        BroadbandAPIUtilities.deserializeBroadbandIntoCountyMap(countyNums.body());
     return countyCodesMap;
   }
 }

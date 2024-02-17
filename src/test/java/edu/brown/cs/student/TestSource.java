@@ -41,7 +41,7 @@ public class TestSource {
         CachedSearcher<String, BroadbandInfo> cachedBroadbandSearch =
                 new CachedSearcher<>(new BroadbandSearch(), 10, 3);
 
-        BroadbandInfo searchInfo = new BroadbandInfo("031", "06");
+        BroadbandInfo searchInfo = new BroadbandInfo("Kings County", "California");
 
         String result = cachedBroadbandSearch.search(searchInfo);
         String result2 = cachedBroadbandSearch.search(searchInfo); // Cached version
@@ -49,6 +49,7 @@ public class TestSource {
         String result3 = cachedBroadbandSearch.search(searchInfo); // Uncached version again
 
         CacheStats cacheStats = cachedBroadbandSearch.getStats();
+        assertEquals(result, "asdf");
         assertEquals(result, result2);
         assertEquals(result2, result3);
         assertEquals(result, result2);

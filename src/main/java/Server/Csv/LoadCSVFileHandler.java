@@ -4,9 +4,14 @@ import Creator.Creator;
 import Parser.CSVParse;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -50,6 +55,9 @@ public class LoadCSVFileHandler implements Route {
     String path = request.queryParams("path");
     String fileLocation = "data/" + path;
 
+    Moshi moshi = new Moshi.Builder().build();
+    Type mapStringObject = Types.newParameterizedType(Map.class, String.class, Object.class);
+    JsonAdapter<Map<String, Object>> adapter = moshi.adapter(mapStringObject);
     // Creates a hashmap to store the results of the request
     Map<String, Object> responseMap = new HashMap<>();
     try {
@@ -59,13 +67,13 @@ public class LoadCSVFileHandler implements Route {
       responseMap.put("result", "success");
       // Set the CSVParser to the current loaded in files parser
       this.data.setCSVParser(csvFileParser);
-      return responseMap;
+      return adapter.toJson(responseMap);
     } catch (Exception e) {
       e.printStackTrace();
       // Exception message if unable to load it.
-      responseMap.put("result", "Exception: unable to load CSV");
+      responseMap.put("result", "error_datasource");
     }
-    return responseMap;
+    return adapter.toJson(responseMap);
   }
 
   /**

@@ -1,9 +1,9 @@
 package Server.Cache;
 
-import JsonTypes.BroadbandInfo;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.cache.CacheStats;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.concurrent.TimeUnit;
@@ -33,17 +33,16 @@ public class CachedSearcher<RESULT, TARGET> implements SearchInterface<RESULT, T
    *
    * @param toWrap the Searcher to wrap
    * @param maxSize maxSize wanted of the cache
-   * @param expireAfterWrite how long it should be in the cache for
+   * @param expireAfterWrite how long it should be in the cache for in SECONDS
    */
-  public CachedSearcher(
-          SearchInterface<RESULT, TARGET> toWrap, int maxSize, int expireAfterWrite) {
+  public CachedSearcher(SearchInterface<RESULT, TARGET> toWrap, int maxSize, int expireAfterWrite) {
     this.wrappedSearcher = toWrap;
     this.cache =
         CacheBuilder.newBuilder()
             // How many entries maximum in the cache?
             .maximumSize(maxSize)
             // How long should entries remain in the cache?
-            .expireAfterWrite(expireAfterWrite, TimeUnit.MINUTES)
+            .expireAfterWrite(expireAfterWrite, TimeUnit.SECONDS)
             // Keep statistical info around for profiling purposes
             .recordStats()
             .build(
@@ -53,8 +52,7 @@ public class CachedSearcher<RESULT, TARGET> implements SearchInterface<RESULT, T
                   @Override
                   public RESULT load(TARGET key)
                       throws URISyntaxException, IOException, InterruptedException {
-                    System.out.println(
-                        "called load for: " + key.toString());
+                    System.out.println("called load for: " + key.toString());
                     // If this isn't yet present in the cache, load it:
                     return wrappedSearcher.search(key);
                   }
@@ -74,5 +72,9 @@ public class CachedSearcher<RESULT, TARGET> implements SearchInterface<RESULT, T
     // For debugging and demo (would remove in a "real" version):
     System.out.println(cache.stats());
     return result;
+  }
+
+  public CacheStats getStats() {
+    return this.cache.stats();
   }
 }

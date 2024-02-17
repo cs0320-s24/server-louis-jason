@@ -2,7 +2,6 @@ package Server.Broadband;
 
 import JsonTypes.BroadbandInfo;
 import Server.Cache.SearchInterface;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -69,9 +68,7 @@ public class BroadbandSearch implements SearchInterface<String, BroadbandInfo> {
       countyCode = "*";
     } else {
       // ask the API for the code for the county name that was passed in
-      countyCode =
-          BroadbandAPIUtilities.deserializeBroadbandCounty(this.getCountyCodes(stateCode))
-              .get(countyName);
+      countyCode = this.getCountyCodes(stateCode).get(countyName);
       // if the county does not exist in the census API then return a bad request error
       if (countyCode == null) {
         broadbandData = "error_bad_request";
@@ -166,7 +163,7 @@ public class BroadbandSearch implements SearchInterface<String, BroadbandInfo> {
    * @throws IOException
    * @throws InterruptedException
    */
-  private String getCountyCodes(String stateCode)
+  private HashMap<String, String> getCountyCodes(String stateCode)
       throws URISyntaxException, IOException, InterruptedException {
     // setting up the request to get information from the below URL
     HttpRequest retrieveCountyNums =
@@ -184,6 +181,9 @@ public class BroadbandSearch implements SearchInterface<String, BroadbandInfo> {
             .build()
             .send(retrieveCountyNums, HttpResponse.BodyHandlers.ofString());
 
-    return countyNums.body();
+    HashMap<String, String> countyCodesMap =
+        BroadbandAPIUtilities.deserializeBroadbandIntoStateMap(countyNums.body());
+
+    return countyCodesMap;
   }
 }

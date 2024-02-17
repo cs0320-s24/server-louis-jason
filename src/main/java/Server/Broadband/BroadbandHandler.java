@@ -1,9 +1,8 @@
 package Server.Broadband;
 
-import java.util.*;
-
 import JsonTypes.BroadbandInfo;
 import Server.Cache.SearchInterface;
+import java.util.*;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -22,7 +21,7 @@ public class BroadbandHandler implements Route {
    * @param request The request object providing information about the HTTP request
    * @param response The response object providing functionality for modifying the response
    */
-  private SearchInterface<String, BroadbandInfo> cachedBroadbandSearcher;
+  private SearchInterface<String, BroadbandInfo> broadbandSearcher;
 
   /**
    * Constructor takes in an instance of BroadbandInterface, used for caching
@@ -30,7 +29,7 @@ public class BroadbandHandler implements Route {
    * @param cachedBroadbandSearcher
    */
   public BroadbandHandler(SearchInterface<String, BroadbandInfo> cachedBroadbandSearcher) {
-    this.cachedBroadbandSearcher = cachedBroadbandSearcher;
+    this.broadbandSearcher = cachedBroadbandSearcher;
   }
 
   /**
@@ -68,7 +67,7 @@ public class BroadbandHandler implements Route {
           BroadbandAPIUtilities.makeBroadbandInfo(countyName, stateName);
       // look for information in the cache, if it is not in the cache then it will do a regular
       // search call
-      String broadbandResult = this.cachedBroadbandSearcher.search(broadbandToSearch);
+      String broadbandResult = this.broadbandSearcher.search(broadbandToSearch);
       // deserialize the data that was returned from our search call
       List<List<String>> deserializedBroadbandData =
           BroadbandAPIUtilities.deserializeBroadbandData(broadbandResult);

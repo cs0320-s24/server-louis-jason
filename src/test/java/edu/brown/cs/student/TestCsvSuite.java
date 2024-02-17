@@ -14,7 +14,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
 
-public class TestingSuite {
+public class TestCsvSuite {
   @Test
   public void testBasicParse() {
     Creator creator = new Creator();

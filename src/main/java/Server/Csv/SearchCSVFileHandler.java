@@ -63,8 +63,17 @@ public class SearchCSVFileHandler implements Route {
     } catch (Exception e) {
       e.printStackTrace();
       // Exception stack trace printed out
+      if (e instanceof NullPointerException) {
+        String failure = "Error handling parameters. " +
+                "Usage: searchcsv?value=<term> " +
+                "Optional parameters: booleanHeader=true/false, " +
+                "booleanHeaderAnInt=true/false, " +
+                "identifier=<name or integer depending on previous selection>";
+        return new SearchFailureResponse("error_bad_request", failure).serialize();
+      }
+      String failure = e.getMessage();
+      return new SearchFailureResponse("error_datasource", failure).serialize();
     }
-    return new SearchFailureResponse().serialize();
   }
 
   /** Response object to send with the information that was requested in the search */
@@ -92,9 +101,10 @@ public class SearchCSVFileHandler implements Route {
   }
 
   /** Response object to send if there was an error */
-  public record SearchFailureResponse(String response_type) {
-    public SearchFailureResponse() {
-      this("error: was not able to perform search");
+  public record SearchFailureResponse(String result, String message) {
+    public SearchFailureResponse(String result, String message) {
+      this.result = result;
+      this.message = message;
     }
 
     /**

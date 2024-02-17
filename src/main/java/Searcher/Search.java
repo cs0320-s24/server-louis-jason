@@ -37,7 +37,7 @@ public class Search {
    * terminal. If there is malformed data, then the search function will skip that row and try to
    * continue searching for the value.
    */
-  public void searches() {
+  public void searches() throws Exception {
     this.testList = new ArrayList<>();
     // this finds the number of columns that is in the very first row of the CSV file
     int numberOfColumns = this.objectList.get(0).size();
@@ -62,7 +62,7 @@ public class Search {
       for (List<String> strings : this.objectList) {
         // error checks for malformed data
         if (strings.size() != numberOfColumns) {
-          System.out.println(
+          throw new Exception(
               "Skipped row "
                   + row
                   + "Number of columns in this row\n"
@@ -88,7 +88,7 @@ public class Search {
             for (List<String> strings : this.objectList) {
               // error checking for malformed data
               if (strings.size() != numberOfColumns) {
-                System.out.println(
+                throw new Exception(
                     "Skipped row "
                         + row2
                         + " due to malformed data. Number of columns in this row\n"
@@ -128,13 +128,13 @@ public class Search {
    * helper function that goes through all of csv file when there are no headers or headers cant be
    * used
    */
-  private void helperNoHeaders() {
+  private void helperNoHeaders() throws Exception {
     int row3 = 0;
     // we must search through all of the csv file to look for the value we want
     for (List<String> strings : this.objectList) {
       // check for malformed data
       if (strings.size() != this.numberOfColumns) {
-        System.out.println(
+        throw new Exception(
             "Skipped row "
                 + row3
                 + " due to malformed data. Number of columns in this row\n"

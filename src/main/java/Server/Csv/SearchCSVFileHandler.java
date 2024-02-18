@@ -3,11 +3,8 @@ package Server.Csv;
 import Searcher.Search;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -69,14 +66,16 @@ public class SearchCSVFileHandler implements Route {
       e.printStackTrace();
       // Exception stack trace printed out
       if (this.data.nullParser()) {
-        return new SearchFailureResponse("error_datasource", "Please load a file first").serialize();
+        return new SearchFailureResponse("error_datasource", "Please load a file first")
+            .serialize();
       }
       if (e instanceof NullPointerException) {
-        String failure = "Error handling parameters. " +
-                "Usage: searchcsv?value=<term> " +
-                "Optional parameters: booleanHeader=true/false, " +
-                "booleanHeaderAnInt=true/false, " +
-                "identifier=<name or integer depending on previous selection>";
+        String failure =
+            "Error handling parameters. "
+                + "Usage: searchcsv?value=<term> "
+                + "Optional parameters: booleanHeader=true/false, "
+                + "booleanHeaderAnInt=true/false, "
+                + "identifier=<name or integer depending on previous selection>";
         return new SearchFailureResponse("error_bad_request", failure).serialize();
       }
       String failure = e.getMessage();
@@ -85,7 +84,8 @@ public class SearchCSVFileHandler implements Route {
   }
 
   /** Response object to send with the information that was requested in the search */
-  public record SearchSuccessResponse(String response_type, List<List<String>> data, List<String> params) {
+  public record SearchSuccessResponse(
+      String response_type, List<List<String>> data, List<String> params) {
     public SearchSuccessResponse(List<List<String>> data, List<String> params) {
       this("success", data, params);
     }

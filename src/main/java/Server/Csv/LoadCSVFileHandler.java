@@ -2,16 +2,15 @@ package Server.Csv;
 
 import Creator.Creator;
 import Parser.CSVParse;
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.squareup.moshi.Types;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
-import com.squareup.moshi.Types;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -78,7 +77,8 @@ public class LoadCSVFileHandler implements Route {
       e.printStackTrace();
       // Exception message if unable to load it.
       responseMap.put("result", "error_datasource");
-      responseMap.put("message", "Cannot find specified file. Make sure path is within data/ directory.");
+      responseMap.put(
+          "message", "Cannot find specified file. Make sure path is within data/ directory.");
     }
     return adapter.toJson(responseMap);
   }

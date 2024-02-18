@@ -2,13 +2,11 @@ package Server.Broadband;
 
 import JsonTypes.BroadbandInfo;
 import Server.Cache.SearchInterface;
-
-import java.lang.reflect.Type;
-import java.util.*;
-
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
+import java.lang.reflect.Type;
+import java.util.*;
 import spark.Request;
 import spark.Response;
 import spark.Route;

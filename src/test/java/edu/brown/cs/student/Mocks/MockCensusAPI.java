@@ -3,11 +3,8 @@ package edu.brown.cs.student.Mocks;
 import JsonTypes.BroadbandInfo;
 import Server.Broadband.BroadbandAPIUtilities;
 import Server.Cache.SearchInterface;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class MockCensusAPI implements SearchInterface<String, BroadbandInfo> {
@@ -87,8 +84,9 @@ public class MockCensusAPI implements SearchInterface<String, BroadbandInfo> {
     // Throws an exception otherwise
     // ["Marin County, California","94.0","06","041"]
 
-    String content = "[[\"NAME\",\"S2802_C03_022E\",\"state\",\"county\"],\n" +
-            "[\"Marin County, California\",\"94.0\",\"06\",\"041\"]]";
+    String content =
+        "[[\"NAME\",\"S2802_C03_022E\",\"state\",\"county\"],\n"
+            + "[\"Marin County, California\",\"94.0\",\"06\",\"041\"]]";
 
     if (county.equals("041") && state.equals("06")) {
       return content;
@@ -121,65 +119,66 @@ public class MockCensusAPI implements SearchInterface<String, BroadbandInfo> {
    */
   private HashMap<String, String> getCountyCodes(String stateCode) throws IOException {
     // Only returns if given California code
-    String content = "[[\"NAME\",\"state\",\"county\"],\n" +
-            "[\"Colusa County, California\",\"06\",\"011\"],\n" +
-            "[\"Butte County, California\",\"06\",\"007\"],\n" +
-            "[\"Alameda County, California\",\"06\",\"001\"],\n" +
-            "[\"Alpine County, California\",\"06\",\"003\"],\n" +
-            "[\"Amador County, California\",\"06\",\"005\"],\n" +
-            "[\"Calaveras County, California\",\"06\",\"009\"],\n" +
-            "[\"Contra Costa County, California\",\"06\",\"013\"],\n" +
-            "[\"Del Norte County, California\",\"06\",\"015\"],\n" +
-            "[\"Kings County, California\",\"06\",\"031\"],\n" +
-            "[\"Glenn County, California\",\"06\",\"021\"],\n" +
-            "[\"Humboldt County, California\",\"06\",\"023\"],\n" +
-            "[\"Imperial County, California\",\"06\",\"025\"],\n" +
-            "[\"El Dorado County, California\",\"06\",\"017\"],\n" +
-            "[\"Fresno County, California\",\"06\",\"019\"],\n" +
-            "[\"Inyo County, California\",\"06\",\"027\"],\n" +
-            "[\"Kern County, California\",\"06\",\"029\"],\n" +
-            "[\"Mariposa County, California\",\"06\",\"043\"],\n" +
-            "[\"Lake County, California\",\"06\",\"033\"],\n" +
-            "[\"Lassen County, California\",\"06\",\"035\"],\n" +
-            "[\"Los Angeles County, California\",\"06\",\"037\"],\n" +
-            "[\"Madera County, California\",\"06\",\"039\"],\n" +
-            "[\"Marin County, California\",\"06\",\"041\"],\n" +
-            "[\"Orange County, California\",\"06\",\"059\"],\n" +
-            "[\"Mendocino County, California\",\"06\",\"045\"],\n" +
-            "[\"Merced County, California\",\"06\",\"047\"],\n" +
-            "[\"Modoc County, California\",\"06\",\"049\"],\n" +
-            "[\"Mono County, California\",\"06\",\"051\"],\n" +
-            "[\"Monterey County, California\",\"06\",\"053\"],\n" +
-            "[\"Napa County, California\",\"06\",\"055\"],\n" +
-            "[\"Nevada County, California\",\"06\",\"057\"],\n" +
-            "[\"San Bernardino County, California\",\"06\",\"071\"],\n" +
-            "[\"Sacramento County, California\",\"06\",\"067\"],\n" +
-            "[\"San Benito County, California\",\"06\",\"069\"],\n" +
-            "[\"Placer County, California\",\"06\",\"061\"],\n" +
-            "[\"Plumas County, California\",\"06\",\"063\"],\n" +
-            "[\"Riverside County, California\",\"06\",\"065\"],\n" +
-            "[\"San Joaquin County, California\",\"06\",\"077\"],\n" +
-            "[\"San Diego County, California\",\"06\",\"073\"],\n" +
-            "[\"San Francisco County, California\",\"06\",\"075\"],\n" +
-            "[\"Siskiyou County, California\",\"06\",\"093\"],\n" +
-            "[\"San Luis Obispo County, California\",\"06\",\"079\"],\n" +
-            "[\"San Mateo County, California\",\"06\",\"081\"],\n" +
-            "[\"Santa Barbara County, California\",\"06\",\"083\"],\n" +
-            "[\"Santa Clara County, California\",\"06\",\"085\"],\n" +
-            "[\"Santa Cruz County, California\",\"06\",\"087\"],\n" +
-            "[\"Shasta County, California\",\"06\",\"089\"],\n" +
-            "[\"Sierra County, California\",\"06\",\"091\"],\n" +
-            "[\"Yuba County, California\",\"06\",\"115\"],\n" +
-            "[\"Solano County, California\",\"06\",\"095\"],\n" +
-            "[\"Sonoma County, California\",\"06\",\"097\"],\n" +
-            "[\"Stanislaus County, California\",\"06\",\"099\"],\n" +
-            "[\"Sutter County, California\",\"06\",\"101\"],\n" +
-            "[\"Tehama County, California\",\"06\",\"103\"],\n" +
-            "[\"Trinity County, California\",\"06\",\"105\"],\n" +
-            "[\"Ventura County, California\",\"06\",\"111\"],\n" +
-            "[\"Yolo County, California\",\"06\",\"113\"],\n" +
-            "[\"Tulare County, California\",\"06\",\"107\"],\n" +
-            "[\"Tuolumne County, California\",\"06\",\"109\"]]";
+    String content =
+        "[[\"NAME\",\"state\",\"county\"],\n"
+            + "[\"Colusa County, California\",\"06\",\"011\"],\n"
+            + "[\"Butte County, California\",\"06\",\"007\"],\n"
+            + "[\"Alameda County, California\",\"06\",\"001\"],\n"
+            + "[\"Alpine County, California\",\"06\",\"003\"],\n"
+            + "[\"Amador County, California\",\"06\",\"005\"],\n"
+            + "[\"Calaveras County, California\",\"06\",\"009\"],\n"
+            + "[\"Contra Costa County, California\",\"06\",\"013\"],\n"
+            + "[\"Del Norte County, California\",\"06\",\"015\"],\n"
+            + "[\"Kings County, California\",\"06\",\"031\"],\n"
+            + "[\"Glenn County, California\",\"06\",\"021\"],\n"
+            + "[\"Humboldt County, California\",\"06\",\"023\"],\n"
+            + "[\"Imperial County, California\",\"06\",\"025\"],\n"
+            + "[\"El Dorado County, California\",\"06\",\"017\"],\n"
+            + "[\"Fresno County, California\",\"06\",\"019\"],\n"
+            + "[\"Inyo County, California\",\"06\",\"027\"],\n"
+            + "[\"Kern County, California\",\"06\",\"029\"],\n"
+            + "[\"Mariposa County, California\",\"06\",\"043\"],\n"
+            + "[\"Lake County, California\",\"06\",\"033\"],\n"
+            + "[\"Lassen County, California\",\"06\",\"035\"],\n"
+            + "[\"Los Angeles County, California\",\"06\",\"037\"],\n"
+            + "[\"Madera County, California\",\"06\",\"039\"],\n"
+            + "[\"Marin County, California\",\"06\",\"041\"],\n"
+            + "[\"Orange County, California\",\"06\",\"059\"],\n"
+            + "[\"Mendocino County, California\",\"06\",\"045\"],\n"
+            + "[\"Merced County, California\",\"06\",\"047\"],\n"
+            + "[\"Modoc County, California\",\"06\",\"049\"],\n"
+            + "[\"Mono County, California\",\"06\",\"051\"],\n"
+            + "[\"Monterey County, California\",\"06\",\"053\"],\n"
+            + "[\"Napa County, California\",\"06\",\"055\"],\n"
+            + "[\"Nevada County, California\",\"06\",\"057\"],\n"
+            + "[\"San Bernardino County, California\",\"06\",\"071\"],\n"
+            + "[\"Sacramento County, California\",\"06\",\"067\"],\n"
+            + "[\"San Benito County, California\",\"06\",\"069\"],\n"
+            + "[\"Placer County, California\",\"06\",\"061\"],\n"
+            + "[\"Plumas County, California\",\"06\",\"063\"],\n"
+            + "[\"Riverside County, California\",\"06\",\"065\"],\n"
+            + "[\"San Joaquin County, California\",\"06\",\"077\"],\n"
+            + "[\"San Diego County, California\",\"06\",\"073\"],\n"
+            + "[\"San Francisco County, California\",\"06\",\"075\"],\n"
+            + "[\"Siskiyou County, California\",\"06\",\"093\"],\n"
+            + "[\"San Luis Obispo County, California\",\"06\",\"079\"],\n"
+            + "[\"San Mateo County, California\",\"06\",\"081\"],\n"
+            + "[\"Santa Barbara County, California\",\"06\",\"083\"],\n"
+            + "[\"Santa Clara County, California\",\"06\",\"085\"],\n"
+            + "[\"Santa Cruz County, California\",\"06\",\"087\"],\n"
+            + "[\"Shasta County, California\",\"06\",\"089\"],\n"
+            + "[\"Sierra County, California\",\"06\",\"091\"],\n"
+            + "[\"Yuba County, California\",\"06\",\"115\"],\n"
+            + "[\"Solano County, California\",\"06\",\"095\"],\n"
+            + "[\"Sonoma County, California\",\"06\",\"097\"],\n"
+            + "[\"Stanislaus County, California\",\"06\",\"099\"],\n"
+            + "[\"Sutter County, California\",\"06\",\"101\"],\n"
+            + "[\"Tehama County, California\",\"06\",\"103\"],\n"
+            + "[\"Trinity County, California\",\"06\",\"105\"],\n"
+            + "[\"Ventura County, California\",\"06\",\"111\"],\n"
+            + "[\"Yolo County, California\",\"06\",\"113\"],\n"
+            + "[\"Tulare County, California\",\"06\",\"107\"],\n"
+            + "[\"Tuolumne County, California\",\"06\",\"109\"]]";
 
     if (stateCode.equals("06")) {
       HashMap<String, String> countyCodesMap =

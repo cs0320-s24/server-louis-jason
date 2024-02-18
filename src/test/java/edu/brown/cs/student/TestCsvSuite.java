@@ -1,5 +1,7 @@
 package edu.brown.cs.student;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import Creator.Creator;
 import Creator.CreatorTestEarnings;
 import Creator.FactoryFailureException;
@@ -13,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.testng.Assert;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestCsvSuite {
   @Test
@@ -173,21 +174,36 @@ public class TestCsvSuite {
     internal1.add("Sophie");
     List<List<String>> testList = new ArrayList<>();
     testList.add(internal1);
-    Exception exception = assertThrows(Exception.class, () -> {
-      searcher.searches();
-    });
-    Exception exception1 = assertThrows(Exception.class, () -> {
-      searcher1.searches();
-    });
-    Exception exception2 = assertThrows(Exception.class, () -> {
-      searcher2.searches();
-    });
-    Exception exception3 = assertThrows(Exception.class, () -> {
-      searcher3.searches();
-    });
-    Exception exception4 = assertThrows(Exception.class, () -> {
-      searcher4.searches();
-    });
+    Exception exception =
+        assertThrows(
+            Exception.class,
+            () -> {
+              searcher.searches();
+            });
+    Exception exception1 =
+        assertThrows(
+            Exception.class,
+            () -> {
+              searcher1.searches();
+            });
+    Exception exception2 =
+        assertThrows(
+            Exception.class,
+            () -> {
+              searcher2.searches();
+            });
+    Exception exception3 =
+        assertThrows(
+            Exception.class,
+            () -> {
+              searcher3.searches();
+            });
+    Exception exception4 =
+        assertThrows(
+            Exception.class,
+            () -> {
+              searcher4.searches();
+            });
   }
 
   @Test
@@ -251,21 +267,36 @@ public class TestCsvSuite {
     internal1.add("Sophie");
     List<List<String>> testList = new ArrayList<>();
     testList.add(internal1);
-    Exception exception = assertThrows(Exception.class, () -> {
-      searcher.searches();
-    });
-    Exception exception1 = assertThrows(Exception.class, () -> {
-      searcher1.searches();
-    });
-    Exception exception2 = assertThrows(Exception.class, () -> {
-      searcher2.searches();
-    });
-    Exception exception3 = assertThrows(Exception.class, () -> {
-      searcher3.searches();
-    });
-    Exception exception4 = assertThrows(Exception.class, () -> {
-      searcher4.searches();
-    });
+    Exception exception =
+        assertThrows(
+            Exception.class,
+            () -> {
+              searcher.searches();
+            });
+    Exception exception1 =
+        assertThrows(
+            Exception.class,
+            () -> {
+              searcher1.searches();
+            });
+    Exception exception2 =
+        assertThrows(
+            Exception.class,
+            () -> {
+              searcher2.searches();
+            });
+    Exception exception3 =
+        assertThrows(
+            Exception.class,
+            () -> {
+              searcher3.searches();
+            });
+    Exception exception4 =
+        assertThrows(
+            Exception.class,
+            () -> {
+              searcher4.searches();
+            });
   }
 
   @Test

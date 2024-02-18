@@ -53,7 +53,8 @@ public class Search {
       }
       // error checking that the identifier is a reasonable number to use
       if (identifier + 1 > numberOfColumns) {
-        throw new Exception("Column identifier out of range (max columns: " + numberOfColumns + ")");
+        throw new Exception(
+            "Column identifier out of range (max columns: " + numberOfColumns + ")");
       }
       int row = 0;
       // go through object list to find if the value is within it
